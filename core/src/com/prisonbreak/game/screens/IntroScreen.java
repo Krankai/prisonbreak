@@ -8,13 +8,17 @@ package com.prisonbreak.game.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.prisonbreak.game.PrisonBreakGame;
 
@@ -36,16 +40,20 @@ public class IntroScreen implements Screen {
         backgroundImage.setPosition(0, 0);
         stage.addActor(backgroundImage);
         
-        // Create title panel
-        Image titleImage = new Image(new Texture(Gdx.files.internal("title_prison_break.jpg")));
-        titleImage.setSize(401, 175);
-        titleImage.setPosition(Gdx.graphics.getWidth()/2 - titleImage.getWidth()/2, Gdx.graphics.getHeight()*2/3 - titleImage.getHeight()/2);
-        stage.addActor(titleImage);
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        BitmapFont myFont = new BitmapFont(Gdx.files.internal("font/Octin-Prison-80.fnt"));
+        labelStyle.font = myFont;
+        labelStyle.fontColor = Color.WHITE;
+        
+        Label title = new Label("PRISON BREAK", labelStyle);
+        title.setPosition(Gdx.graphics.getWidth()/2 - title.getWidth()/2, Gdx.graphics.getHeight()*2/3 - title.getHeight()/2);
+        title.setAlignment(Align.center);
+        stage.addActor(title);
         
         // Create "Play" button
         TextButton playButton = new TextButton("Play", PrisonBreakGame.gameSkin, "round");
         playButton.setWidth(Gdx.graphics.getWidth() / 4);
-        playButton.setPosition(Gdx.graphics.getWidth()/2 - playButton.getWidth()/2, Gdx.graphics.getHeight()*2/5 - playButton.getHeight()/2);
+        playButton.setPosition(Gdx.graphics.getWidth()/2 - playButton.getWidth()/2, Gdx.graphics.getHeight()/2 - playButton.getHeight()/2);
         playButton.addListener(new InputListener() {
             
             @Override
@@ -63,7 +71,7 @@ public class IntroScreen implements Screen {
         // Create "Exit" button
         TextButton exitButton = new TextButton("Exit", PrisonBreakGame.gameSkin, "round");
         exitButton.setWidth(Gdx.graphics.getWidth() / 4);
-        exitButton.setPosition(Gdx.graphics.getWidth()/2 - exitButton.getWidth()/2, Gdx.graphics.getHeight()*3/10 - exitButton.getHeight()/2);
+        exitButton.setPosition(Gdx.graphics.getWidth()/2 - exitButton.getWidth()/2, Gdx.graphics.getHeight()*2/5 - exitButton.getHeight()/2);
         exitButton.addListener(new InputListener() {
            
             @Override
