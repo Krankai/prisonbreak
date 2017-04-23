@@ -7,53 +7,44 @@ package com.prisonbreak.game.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.prisonbreak.game.entities.Player;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.prisonbreak.game.MapControlRenderer;
 
 /**
  *
  * @author user
  */
-public class GameScreen implements Screen, InputProcessor {
+public class GameScreen implements Screen {
     
-    private Game game;
-    private SpriteBatch batch;
-    private Player player;
-    private OrthographicCamera camera;
+    private final Game game;
+    private final TiledMap map;
+    private final MapControlRenderer mapRenderer;
     
     public GameScreen(Game aGame) {
         game = aGame;
-        batch = new SpriteBatch();
-        player = new Player();
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false);
+        
+        // import tiledMap
+        map = new TmxMapLoader().load("tiledmap/map.tmx");
+        mapRenderer = new MapControlRenderer(map);    // create map-control renderer
+        
     }
     
     @Override
     public void show() {
         Gdx.app.log("MainScreen", "show");
-        Gdx.input.setInputProcessor(this);
+        Gdx.input.setInputProcessor(mapRenderer);
     }
     
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
-        camera.update();
-        player.update();
-        
-        batch.begin();
-        batch.draw(player.getImage(), player.x, player.y);
-        batch.end();
+        mapRenderer.render();
     }
     
     @Override
@@ -78,79 +69,7 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public void dispose() {
-//        player.dispose();
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        switch (keycode) {
-            case Keys.LEFT:
-                player.setLeftMove(true);
-                break;
-            case Keys.RIGHT:
-                player.setRightMove(true);
-                break;
-            case Keys.UP:
-                player.setUpMove(true);
-                break;
-            case Keys.DOWN:
-                player.setDownMove(true);
-                break;
-            case Keys.SPACE:
-                player.sleepWakeup();
-                break;
-        }
         
-        return true;
     }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        switch (keycode) {
-            case Keys.LEFT:
-                player.setLeftMove(false);
-                break;
-            case Keys.RIGHT:
-                player.setRightMove(false);
-                break;
-            case Keys.UP:
-                player.setUpMove(false);
-                break;
-            case Keys.DOWN:
-                player.setDownMove(false);
-                break;
-        }
-        
-        return true;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
+    
 }

@@ -9,6 +9,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
+import com.prisonbreak.game.MapControlRenderer;
 
 /**
  *
@@ -21,6 +23,8 @@ public class Player {
     
     private final TextureRegion[] playerFrames;   // 0: down/right , 1: up, 2: left, 3: sleep
     private TextureRegion currentTexture;
+    private final Texture sheet;      // contain spritesheet for player
+    private Sprite sprite;
     
     private boolean moveLeft;
     private boolean moveRight;
@@ -28,13 +32,13 @@ public class Player {
     private boolean moveDown;
     private boolean sleep;      // for fun :)
     
-    public float x;
-    public float y;
-    private final float velocity = 32.0f * 5;
+    public float x;     // position x
+    public float y;     // position y
+    public final float velocity = 32.0f * 5;
     
     public Player() {
         // load sheet image
-        Texture sheet = new Texture(Gdx.files.internal("prisoner.png"));
+        sheet = new Texture(Gdx.files.internal("prisoner.png"));
         
         // split sheet image into multiple single images
         TextureRegion[][] tmp = TextureRegion.split(sheet, sheet.getWidth() / FRAME_COLS, sheet.getHeight() / FRAME_ROWS);
@@ -56,14 +60,19 @@ public class Player {
         
         // initialize direction flags
         moveLeft = moveRight = moveUp = moveDown = false;
+        
+        // sprite
+        sprite = new Sprite(currentTexture);
+        sprite.setX(x);
+        sprite.setY(y);
     }
     
-    public TextureRegion getImage() {
-        return currentTexture;
+    public Sprite getSprite() {
+        return sprite;
     }
     
     public void dispose() {
-       
+       sheet.dispose();
     }
     
     public void setLeftMove(boolean t) {
@@ -119,6 +128,7 @@ public class Player {
         float amountX = velocity * Gdx.graphics.getDeltaTime();
         float amountY = velocity * Gdx.graphics.getDeltaTime();
         
+        // move player along setting direction
         if (moveLeft) {
             currentTexture = playerFrames[2];
             x -= amountX;
@@ -135,11 +145,22 @@ public class Player {
             currentTexture = playerFrames[0];
             y -= amountY;
         }
+        
+        // check for out of bounds
+        x = MathUtils.clamp(x, 0,
+                MapControlRenderer.WORLD_WIDTH - currentTexture.getRegionWidth());
+        y = MathUtils.clamp(y, 0,
+                MapControlRenderer.WORLD_HEIGHT - currentTexture.getRegionHeight());
     }
     
     public void update() {
         if (sleep) return;
         updateMotion();
+        
+        // update sprite
+        sprite = new Sprite(currentTexture);
+        sprite.setX(x);
+        sprite.setY(y);
     }
     
 }
