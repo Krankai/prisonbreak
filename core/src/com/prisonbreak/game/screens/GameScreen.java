@@ -30,6 +30,7 @@ public class GameScreen implements Screen {
         map = new TmxMapLoader().load("tiledmap/map.tmx");
         mapRenderer = new MapControlRenderer(map);    // create map-control renderer
         
+        mapRenderer.setView(mapRenderer.getCamera());
     }
     
     @Override

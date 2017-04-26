@@ -28,22 +28,27 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     
     private Player player;
     private OrthographicCamera camera;
-    private final int drawSpritesAfterLayer = 4;
+    private final int drawSpritesAfterLayer = this.map.getLayers().getIndex("Walls") + 1;
     
     public MapControlRenderer(TiledMap map) {
         super(map);
         
         // create new player
         player = new Player();
+        player.setMap(this.map);                // add map to player
+        player.extractBlockedMapObjects();     // extract MapObjects -> for collision detection
         
         // create camera
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.setToOrtho(false);
-        this.setView(camera);
     }
     
     public Player getPlayer() {
         return player;
+    }
+    
+    public OrthographicCamera getCamera() {
+        return camera;
     }
     
     // allow camera to move along with player
@@ -96,15 +101,19 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     public boolean keyDown(int keycode) {
         switch (keycode) {
             case Input.Keys.LEFT:
+            case Input.Keys.A:
                 player.setLeftMove(true);
                 break;
             case Input.Keys.RIGHT:
+            case Input.Keys.D:
                 player.setRightMove(true);
                 break;
             case Input.Keys.UP:
+            case Input.Keys.W:
                 player.setUpMove(true);
                 break;
             case Input.Keys.DOWN:
+            case Input.Keys.S:
                 player.setDownMove(true);
                 break;
             case Input.Keys.SPACE:
@@ -119,15 +128,19 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     public boolean keyUp(int keycode) {
         switch (keycode) {
             case Input.Keys.LEFT:
+            case Input.Keys.A:
                 player.setLeftMove(false);
                 break;
             case Input.Keys.RIGHT:
+            case Input.Keys.D:
                 player.setRightMove(false);
                 break;
             case Input.Keys.UP:
+            case Input.Keys.W:
                 player.setUpMove(false);
                 break;
             case Input.Keys.DOWN:
+            case Input.Keys.S:
                 player.setDownMove(false);
                 break;
         }
@@ -168,6 +181,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     @Override
     public void dispose() {
         player.dispose();
+        map.dispose();
     }
     
 }

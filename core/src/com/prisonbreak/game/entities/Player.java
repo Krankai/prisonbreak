@@ -9,7 +9,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.PolygonMapObject;
+import com.badlogic.gdx.maps.objects.PolylineMapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.prisonbreak.game.MapControlRenderer;
 
 /**
@@ -25,6 +33,7 @@ public class Player {
     private TextureRegion currentTexture;
     private final Texture sheet;      // contain spritesheet for player
     private Sprite sprite;
+    private TiledMap map;       // the map player is in
     
     private boolean moveLeft;
     private boolean moveRight;
@@ -32,16 +41,26 @@ public class Player {
     private boolean moveDown;
     private boolean sleep;      // for fun :)
     
-    public float x;     // position x
-    public float y;     // position y
+    public float x;         // position x
+    public float y;         // position y
+    public final int width;
+    public final int height;
     public final float velocity = 32.0f * 5;
+    
+    private int[][] blockedUnitGrid;
     
     public Player() {
         // load sheet image
         sheet = new Texture(Gdx.files.internal("prisoner.png"));
         
+        // initialize position and size (and, sleep state)
+        x = y = 0f;
+        width = sheet.getWidth() / FRAME_COLS;
+        height = sheet.getHeight() / FRAME_ROWS;
+        sleep = false;
+        
         // split sheet image into multiple single images
-        TextureRegion[][] tmp = TextureRegion.split(sheet, sheet.getWidth() / FRAME_COLS, sheet.getHeight() / FRAME_ROWS);
+        TextureRegion[][] tmp = TextureRegion.split(sheet, width, height);
         
         // place all images into a 1D array
         playerFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
@@ -51,9 +70,6 @@ public class Player {
                 playerFrames[index++] = tmp[i][j];
             }
         }
-        
-        // initialize position
-        x = y = 0f;
         
         // initialize the current image
         currentTexture = playerFrames[0];
@@ -69,6 +85,50 @@ public class Player {
     
     public Sprite getSprite() {
         return sprite;
+    }
+    
+    public void extractBlockedMapObjects() {
+        // get map objects of ObjectLayer "Collision"
+        MapLayer layer = map.getLayers().get("Collision");
+        MapObjects objects = layer.getObjects();    
+        
+        // fill in blockedUnitGrid with position of static blocked map objects
+        // 1 -> blocked     0 -> not blocked
+        blockedUnitGrid = new int[100][100];
+        boolean isBlocked = false;
+        for (int indexX = 0; indexX < 100; ++indexX) {
+            for (int indexY = 0; indexY < 100; ++indexY) {
+                // convert to position in world map
+                Vector2 worldPosition = new Vector2(indexX * 32f + 16f, indexY * 32f + 16f);  // consider center
+                
+                // check whether that position is "blocked" or not
+                for (MapObject o : objects) {
+                    // retrieve RectangleMapObject objects that are blocked
+                    if (o.isVisible() && o instanceof RectangleMapObject) {
+                        RectangleMapObject rectObject = (RectangleMapObject) o;
+                    
+                        if (rectObject.getRectangle().contains(worldPosition)) {
+                            isBlocked = true;
+                            break;
+                        }
+                    }
+                }
+                
+                // fill 1 / 0 into the corrsponding tile index
+                if (isBlocked) {
+                    blockedUnitGrid[indexX][indexY] = 1;
+                } else {
+                    blockedUnitGrid[indexX][indexY] = 0;
+                }
+                
+                // reset flag
+                isBlocked = false;
+            }
+        }
+    }
+    
+    public void setMap(TiledMap map) {
+        this.map = map;
     }
     
     public void dispose() {
@@ -124,27 +184,69 @@ public class Player {
         }
     }
     
+    // check various kinds of collision
+    //      collision with static objects in the map
+    //      ...
+    private boolean haveCollision(float newX, float newY) {
+        /* With static objects */
+        
+        // position of two points that bound the Player's image
+        Vector2 lowerLeft = new Vector2((int) (newX / 32f), (int) (newY / 32f));
+        Vector2 upperRight =
+                new Vector2((int) Math.ceil((newX + width) / 32f) - 1, (int) Math.ceil((newY + height) / 32f) - 1);
+        
+        // check all the tiles (32x32 pixels) the Player's image accounts for
+        for (int i = (int) lowerLeft.x; i <= (int) upperRight.x; ++i) {
+            for (int j = (int) lowerLeft.y; j <= (int) upperRight.y; ++j) {
+                if (blockedUnitGrid[i][j] == 1) return true;
+            }
+        }
+        
+        
+        return false;
+    }
+    
     public void updateMotion() {
         float amountX = velocity * Gdx.graphics.getDeltaTime();
         float amountY = velocity * Gdx.graphics.getDeltaTime();
-        
+ 
         // move player along setting direction
         if (moveLeft) {
             currentTexture = playerFrames[2];
             x -= amountX;
+            
+            if (haveCollision(x, y)) {
+                x += amountX;
+                moveLeft = false;
+            }
         }
         if (moveRight) {
             currentTexture = playerFrames[0];
             x += amountX;
+            
+            if (haveCollision(x, y)) {
+                x -= amountX;
+                moveRight = false;
+            }
         }
         if (moveUp) {
             currentTexture = playerFrames[1];
             y += amountY;
+            
+            if (haveCollision(x, y)) {
+                y -= amountX;
+                moveUp = false;
+            }
         }
         if (moveDown) {
             currentTexture = playerFrames[0];
             y -= amountY;
-        }
+            
+            if (haveCollision(x, y)) {
+                y += amountY;
+                moveDown = false;
+            } 
+       }
         
         // check for out of bounds
         x = MathUtils.clamp(x, 0,
@@ -154,8 +256,9 @@ public class Player {
     }
     
     public void update() {
-        if (sleep) return;
-        updateMotion();
+        if (!sleep) {
+            updateMotion();
+        }
         
         // update sprite
         sprite = new Sprite(currentTexture);
