@@ -12,8 +12,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
-import com.badlogic.gdx.maps.objects.PolygonMapObject;
-import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.MathUtils;
@@ -104,7 +102,8 @@ public class Player {
                 // check whether that position is "blocked" or not
                 for (MapObject o : objects) {
                     // retrieve RectangleMapObject objects that are blocked
-                    if (o.isVisible() && o instanceof RectangleMapObject) {
+                    if (o.isVisible() && o instanceof RectangleMapObject &&
+                            o.getProperties().get("blocked").equals(new Boolean(true))) {
                         RectangleMapObject rectObject = (RectangleMapObject) o;
                     
                         if (rectObject.getRectangle().contains(worldPosition)) {
@@ -188,6 +187,12 @@ public class Player {
     //      collision with static objects in the map
     //      ...
     private boolean haveCollision(float newX, float newY) {
+        // if out of world map -> no need to check -> stop checking
+        if (newX < 0 || newX + width > MapControlRenderer.WORLD_WIDTH ||
+                newY < 0 || newY + height > MapControlRenderer.WORLD_HEIGHT) {
+            return true;
+        }
+        
         /* With static objects */
         
         // position of two points that bound the Player's image

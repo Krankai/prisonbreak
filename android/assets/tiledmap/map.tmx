@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="19">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="28">
  <tileset firstgid="1" name="materials" tilewidth="32" tileheight="32" tilecount="4096" columns="64">
   <image source="../tilesheets/materials.jpg" width="2048" height="2048"/>
  </tileset>
@@ -530,15 +530,44 @@
 </data>
  </layer>
  <objectgroup name="Collision">
-  <object id="17" name="test2" x="190" y="2846" width="64" height="160">
+  <object id="17" name="outerWall1" x="192" y="128" width="64" height="2880">
    <properties>
     <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="18" name="test1" x="258" y="2975" width="160" height="32">
+  <object id="18" name="outerWall2" x="256" y="2976" width="1024" height="32">
    <properties>
     <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
+  <object id="19" name="outerWall3" x="1280" y="2784" width="64" height="224">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="20" name="outerWall4" x="1344" y="2784" width="1216" height="32">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="21" name="outerWall5" x="2560" y="128" width="64" height="2688">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="23" name="outerWall6" x="2112" y="128" width="448" height="32">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="25" name="outerWall7" x="256" y="128" width="1664" height="32">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="SpecialLocations">
+  <object id="26" name="spawnPoint" x="384" y="1728" width="64" height="64"/>
+  <object id="27" name="winningPoint" x="1920" y="32" width="192" height="64"/>
  </objectgroup>
 </map>
