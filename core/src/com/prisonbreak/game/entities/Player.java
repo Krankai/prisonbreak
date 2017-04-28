@@ -43,7 +43,7 @@ public class Player {
     public float y;         // position y
     public final int width;
     public final int height;
-    public final float velocity = 32.0f * 5;
+    public final float velocity = 32.0f * 4;
     
     private int[][] blockedUnitGrid;
     
@@ -88,7 +88,7 @@ public class Player {
     public void extractBlockedMapObjects() {
         // get map objects of ObjectLayer "Collision"
         MapLayer layer = map.getLayers().get("Collision");
-        MapObjects objects = layer.getObjects();    
+        MapObjects objects = layer.getObjects();
         
         // fill in blockedUnitGrid with position of static blocked map objects
         // 1 -> blocked     0 -> not blocked
@@ -124,6 +124,9 @@ public class Player {
                 isBlocked = false;
             }
         }
+        
+//        Gdx.app.log("Test: ", " " + blockedUnitGrid[13][38] + " " + blockedUnitGrid[13][39] +
+//                " " + blockedUnitGrid[12][38] + " " + blockedUnitGrid[12][39]);
     }
     
     public void setMap(TiledMap map) {
@@ -195,6 +198,7 @@ public class Player {
         
         /* With static objects */
         
+        // WRONG HERE !!! NEED TO BE FIXED
         // position of two points that bound the Player's image
         Vector2 lowerLeft = new Vector2((int) (newX / 32f), (int) (newY / 32f));
         Vector2 upperRight =
@@ -258,6 +262,8 @@ public class Player {
                 MapControlRenderer.WORLD_WIDTH - currentTexture.getRegionWidth());
         y = MathUtils.clamp(y, 0,
                 MapControlRenderer.WORLD_HEIGHT - currentTexture.getRegionHeight());
+        
+//        Gdx.app.log("Player:", x + " " + y + " " + (x + width) + " " + (y + height));
     }
     
     public void update() {
