@@ -43,7 +43,7 @@ public class Player {
     public float y;         // position y
     public final int width;
     public final int height;
-    public final float velocity = 32.0f * 4;
+    public final float velocity = 32.0f * 6;
     
     private int[][] blockedUnitGrid;
     
@@ -103,6 +103,7 @@ public class Player {
                 for (MapObject o : objects) {
                     // retrieve RectangleMapObject objects that are blocked
                     if (o.isVisible() && o instanceof RectangleMapObject &&
+                            o.getProperties().get("blocked") != null &&
                             o.getProperties().get("blocked").equals(new Boolean(true))) {
                         RectangleMapObject rectObject = (RectangleMapObject) o;
                     
@@ -131,6 +132,18 @@ public class Player {
     
     public void setMap(TiledMap map) {
         this.map = map;
+    }
+    
+    // set Player position to spawming location
+    public void setPlayerToSpawm() {
+        MapObject spawmPoint = map.getLayers().get("SpecialLocations").getObjects().get("spawmPoint");
+        int spawmX = spawmPoint.getProperties().get("X", 0, Integer.class);
+        int spawmY = spawmPoint.getProperties().get("Y", 0, Integer.class);
+        
+//        x = spawmX;
+//        y = 99 * 32 - spawmY;
+        x = 384;
+        y = 1408;
     }
     
     public void dispose() {
@@ -200,13 +213,40 @@ public class Player {
         
         // WRONG HERE !!! NEED TO BE FIXED
         // position of two points that bound the Player's image
-        Vector2 lowerLeft = new Vector2((int) (newX / 32f), (int) (newY / 32f));
-        Vector2 upperRight =
-                new Vector2((int) Math.ceil((newX + width) / 32f) - 1, (int) Math.ceil((newY + height) / 32f) - 1);
+        int lowerBoundX, lowerBoundY, upperBoundX, upperBoundY, temp;
+        float alpha = (float) 0.25;
+        
+        temp = (int) (newX / 32f);                  // account for less than 12.5% of the
+        if ((newX / 32f - temp) > (1 - alpha)) {    // left tile -> do not consider
+            lowerBoundX = temp + 1;
+        } else {                                    // otherwise; consider when checking
+            lowerBoundX = temp;                     // for collision
+        }
+        
+        temp = (int) (newY / 32f);                  // account for less than 12.5% of the
+        if ((newY / 32f - temp) > (1 - alpha)) {    // below tile -> do not consider
+            lowerBoundY = temp + 1;
+        } else {
+            lowerBoundY = temp;
+        }
+        
+        temp = (int) ((newX + width) / 32f);            // account for less than 12.5% of the
+        if (((newX + width) / 32f - temp) < alpha) {    // right tile -> do not consider
+            upperBoundX =  temp - 1;
+        } else {
+            upperBoundX = temp;
+        }
+        
+        temp = (int) ((newY + height) / 32f);           // account for less than 12.5% of the
+        if (((newY + height) / 32f - temp) < alpha) {   // above tile -> do not consider
+            upperBoundY = temp - 1;
+        } else {
+            upperBoundY = temp;
+        }
         
         // check all the tiles (32x32 pixels) the Player's image accounts for
-        for (int i = (int) lowerLeft.x; i <= (int) upperRight.x; ++i) {
-            for (int j = (int) lowerLeft.y; j <= (int) upperRight.y; ++j) {
+        for (int i = (int) lowerBoundX; i <= (int) upperBoundX; ++i) {
+            for (int j = (int) lowerBoundY; j <= (int) upperBoundY; ++j) {
                 if (blockedUnitGrid[i][j] == 1) return true;
             }
         }

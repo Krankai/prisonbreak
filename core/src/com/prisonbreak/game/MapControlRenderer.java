@@ -36,11 +36,12 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         // create new player
         player = new Player();
         player.setMap(this.map);                // add map to player
-        player.extractBlockedMapObjects();     // extract MapObjects -> for collision detection
+        player.setPlayerToSpawm();              // add Player at spawming point of the map
+        player.extractBlockedMapObjects();      // extract MapObjects -> for collision detection
         
         // create camera
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.setToOrtho(false);
+        camera.translate(player.x, player.y);
     }
     
     public Player getPlayer() {
