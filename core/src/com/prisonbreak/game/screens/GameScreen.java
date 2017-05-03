@@ -35,7 +35,7 @@ public class GameScreen implements Screen {
     
     @Override
     public void show() {
-        Gdx.app.log("MainScreen", "show");
+//        Gdx.app.log("MainScreen", "show");
         Gdx.input.setInputProcessor(mapRenderer);
     }
     
@@ -46,6 +46,12 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
         mapRenderer.render();
+        
+        // check winning condition
+        if (mapRenderer.getCurrentState() == MapControlRenderer.STATE.WIN) {
+//            Gdx.app.log("Player ", "wins");
+            game.setScreen(new IntroScreen(game));
+        }
     }
     
     @Override
@@ -55,7 +61,7 @@ public class GameScreen implements Screen {
     
     @Override
     public void pause() {
-
+        
     }
 
     @Override

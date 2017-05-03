@@ -11,10 +11,13 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.prisonbreak.game.entities.Player;
 
 /**
@@ -26,22 +29,44 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     public static final int WORLD_WIDTH = 100 * 32;
     public static final int WORLD_HEIGHT = 100 * 32;
     
-    private Player player;
-    private OrthographicCamera camera;
+    private final Player player;
+    private final OrthographicCamera camera;
     private final int drawSpritesAfterLayer = this.map.getLayers().getIndex("Walls") + 1;
+    
+    public enum STATE {
+        ONGOING, WIN, LOSE
+    }
+    private STATE state;      
+    
+    private int[][] blockedWallUnitGrid;
+    private final MapObjects staticObjects;
+    private final MapObject winningLocation;
     
     public MapControlRenderer(TiledMap map) {
         super(map);
+        state = STATE.ONGOING;
         
         // create new player
         player = new Player();
-        player.setMap(this.map);                // add map to player
-        player.setPlayerToSpawm();              // add Player at spawming point of the map
-        player.extractBlockedMapObjects();      // extract MapObjects -> for collision detection
+        player.setMapControlRenderer(this);         // add map to player
+        setPlayerToSpawm();                         // add Player at spawming point of the map
+        
+        // extract a grid identifying position of walls -> for detecting collision
+        extractBlockedWalls();      // stored in blockedWallUnitGrid
+        
+        // get list of static (blocked) objects
+        staticObjects = map.getLayers().get("ObjectCollision").getObjects();
+        
+        // extract winning location
+        winningLocation = map.getLayers().get("SpecialLocations").getObjects().get("winningPoint");
         
         // create camera
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.translate(player.x, player.y);
+    }
+    
+    public STATE getCurrentState() {
+        return state;
     }
     
     public Player getPlayer() {
@@ -50,6 +75,18 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     
     public OrthographicCamera getCamera() {
         return camera;
+    }
+    
+    public int[][] getBlockedWallsGrid() {
+        return blockedWallUnitGrid;
+    }
+    
+    public MapObjects getStaticObjects() {
+        return staticObjects;
+    }
+    
+    public MapObject getWinningLocation() {
+        return winningLocation;
     }
     
     // allow camera to move along with player
@@ -65,10 +102,78 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         this.setView(camera);
     }
     
+    private void extractBlockedWalls() {
+        // get map objects of ObjectLayer "Collision"
+        MapLayer layer = map.getLayers().get("WallCollision");
+        MapObjects objects = layer.getObjects();
+        
+        // fill in blockedWallUnitGrid with position of static blocked map objects
+        // 1 -> blocked     0 -> not blocked
+        blockedWallUnitGrid = new int[100][100];
+        boolean isBlocked = false;
+        for (int indexX = 0; indexX < 100; ++indexX) {
+            for (int indexY = 0; indexY < 100; ++indexY) {
+                // convert to position in world map
+                Vector2 worldPosition = new Vector2(indexX * 32f + 16f, indexY * 32f + 16f);  // consider center
+                
+                // check whether that position is "blocked" or not
+                for (MapObject o : objects) {
+                    // retrieve RectangleMapObject objects that are blocked
+                    if (o.isVisible() && o instanceof RectangleMapObject &&
+                            o.getProperties().get("blocked") != null &&
+                            o.getProperties().get("blocked").equals(new Boolean(true))) {
+                        RectangleMapObject rectObject = (RectangleMapObject) o;
+                    
+                        if (rectObject.getRectangle().contains(worldPosition)) {
+                            isBlocked = true;
+                            break;
+                        }
+                    }
+                }
+                
+                // fill 1 / 0 into the corrsponding tile index
+                if (isBlocked) {
+                    blockedWallUnitGrid[indexX][indexY] = 1;
+                } else {
+                    blockedWallUnitGrid[indexX][indexY] = 0;
+                }
+                
+                // reset flag
+                isBlocked = false;
+            }
+        }
+        
+//        Gdx.app.log("Test: ", " " + blockedWallUnitGrid[13][38] + " " + blockedWallUnitGrid[13][39] +
+//                " " + blockedWallUnitGrid[12][38] + " " + blockedWallUnitGrid[12][39]);
+    }
+    
+    // set Player position to spawming location
+    private void setPlayerToSpawm() {
+        MapObject spawmPoint = map.getLayers().get("SpecialLocations").getObjects().get("spawmPoint");
+        RectangleMapObject rectSpawmPoint = (RectangleMapObject) spawmPoint;
+        
+//        player.x = rectSpawmPoint.getRectangle().getX();
+//        player.y = rectSpawmPoint.getRectangle().getY();
+        player.x = 71 * 32;
+        player.y = 82 * 32;
+    }
+    
+    // checking winning condition
+    private boolean winGame() {
+        RectangleMapObject rectLoc = (RectangleMapObject) winningLocation;
+        
+        if (rectLoc.getRectangle().contains(player.getSprite().getBoundingRectangle()))
+            return true;
+        return false;
+    }
+    
     @Override
     public void render() {
         player.update();
         moveCamera();
+        
+        // update winning state
+        if (winGame()) state = STATE.WIN;
         
         beginRender();
         
