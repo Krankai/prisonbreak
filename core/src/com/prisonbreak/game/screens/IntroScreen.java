@@ -27,6 +27,7 @@ import com.prisonbreak.game.PrisonBreakGame;
  * @author user
  */
 public class IntroScreen implements Screen {
+    
     private Stage stage;
     private Game game;
     
@@ -34,12 +35,13 @@ public class IntroScreen implements Screen {
         game = aGame;
         stage = new Stage(new ScreenViewport());
         
-        // Add background image
+        // add background image
         Image backgroundImage = new Image(new Texture(Gdx.files.internal("background.jpg")));
         backgroundImage.setSize(PrisonBreakGame.BACKGROUND_WIDTH, PrisonBreakGame.BACKGROUND_HEIGHT);
         backgroundImage.setPosition(0, 0);
         stage.addActor(backgroundImage);
         
+        // add title
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         BitmapFont myFont = new BitmapFont(Gdx.files.internal("font/Octin-Prison-80.fnt"));
         labelStyle.font = myFont;
@@ -50,7 +52,7 @@ public class IntroScreen implements Screen {
         title.setAlignment(Align.center);
         stage.addActor(title);
         
-        // Create "Play" button
+        // create "Play" button
         TextButton playButton = new TextButton("Play", PrisonBreakGame.gameSkin, "round");
         playButton.setWidth(Gdx.graphics.getWidth() / 4);
         playButton.setPosition(Gdx.graphics.getWidth()/2 - playButton.getWidth()/2, Gdx.graphics.getHeight()/2 - playButton.getHeight()/2);
@@ -65,10 +67,11 @@ public class IntroScreen implements Screen {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
             }
+            
         });
         stage.addActor(playButton);
         
-        // Create "Exit" button
+        // create "Exit" button
         TextButton exitButton = new TextButton("Exit", PrisonBreakGame.gameSkin, "round");
         exitButton.setWidth(Gdx.graphics.getWidth() / 4);
         exitButton.setPosition(Gdx.graphics.getWidth()/2 - exitButton.getWidth()/2, Gdx.graphics.getHeight()*2/5 - exitButton.getHeight()/2);
@@ -83,6 +86,7 @@ public class IntroScreen implements Screen {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
             }
+            
         });
         stage.addActor(exitButton);
     }
@@ -124,4 +128,5 @@ public class IntroScreen implements Screen {
     public void dispose() {
         stage.dispose();
     }
+    
 }

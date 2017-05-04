@@ -34,7 +34,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     private final int drawSpritesAfterLayer = this.map.getLayers().getIndex("Walls") + 1;
     
     public enum STATE {
-        ONGOING, WIN, LOSE
+        ONGOING, WIN, LOSE, PAUSED
     }
     private STATE state;      
     
@@ -67,6 +67,10 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     
     public STATE getCurrentState() {
         return state;
+    }
+    
+    public void setCurrentState(STATE state) {
+        this.state = state;
     }
     
     public Player getPlayer() {
@@ -162,15 +166,18 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     private boolean winGame() {
         RectangleMapObject rectLoc = (RectangleMapObject) winningLocation;
         
-        if (rectLoc.getRectangle().contains(player.getSprite().getBoundingRectangle()))
+        if (state != STATE.PAUSED && 
+                rectLoc.getRectangle().contains(player.getSprite().getBoundingRectangle()))
             return true;
         return false;
     }
     
     @Override
     public void render() {
-        player.update();
-        moveCamera();
+        if (state != STATE.PAUSED) {
+            player.update();
+            moveCamera();
+        }
         
         // update winning state
         if (winGame()) state = STATE.WIN;
@@ -248,6 +255,8 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
             case Input.Keys.DOWN:
             case Input.Keys.S:
                 player.setDownMove(false);
+                break;
+            case Input.Keys.ESCAPE:
                 break;
         }
         

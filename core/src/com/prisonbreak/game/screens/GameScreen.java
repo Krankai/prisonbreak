@@ -7,11 +7,26 @@ package com.prisonbreak.game.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.prisonbreak.game.MapControlRenderer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -22,15 +37,51 @@ public class GameScreen implements Screen {
     private final Game game;
     private final TiledMap map;
     private final MapControlRenderer mapRenderer;
+    private final Skin skin;
+    private final Stage stage;
+    private Label label;
+    private Group labelContainer;
+    private ScheduledExecutorService executorService; 
     
     public GameScreen(Game aGame) {
         game = aGame;
         
         // import tiledMap
         map = new TmxMapLoader().load("tiledmap/map.tmx");
-        mapRenderer = new MapControlRenderer(map);    // create map-control renderer
+        mapRenderer = new MapControlRenderer(map);      // create map-control renderer
+        mapRenderer.setView(mapRenderer.getCamera());   // set camera using with the renderer
         
-        mapRenderer.setView(mapRenderer.getCamera());
+        // import skin
+        skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+        
+        // create new stage
+        stage = new Stage(new ScreenViewport());
+        
+        // create label for displaying message, initialize to winning message
+        label = new Label("CONGRATULATIONS\nYOU HAVE ESCAPED THE PRISON\nPRESS ESC TO RETURN TO MAIN MENU",
+                skin, "title-plain");
+        label.setColor(Color.RED);
+        label.setPosition(0, 0);
+        label.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        label.setAlignment(Align.center);
+       
+        // create a Group container that contains the label and perform some actions
+        labelContainer = new Group();
+        labelContainer.addActor(label);
+        labelContainer.setOrigin(label.getWidth() / 2, label.getHeight() / 2);
+        stage.addActor(labelContainer);
+        
+        // initalize actions for winning state
+        labelContainer.setScale(0);
+        
+        ParallelAction parallelAction = new ParallelAction();
+        parallelAction.addAction(Actions.rotateBy(360, 2, Interpolation.smooth));
+        parallelAction.addAction(Actions.scaleBy((float) 2, (float) 2, 3, Interpolation.smooth));
+        parallelAction.addAction(Actions.fadeIn(1));
+        
+        labelContainer.addAction(parallelAction);   // add actions to container
+        
+        executorService = Executors.newSingleThreadScheduledExecutor();
     }
     
     @Override
@@ -50,7 +101,28 @@ public class GameScreen implements Screen {
         // check winning condition
         if (mapRenderer.getCurrentState() == MapControlRenderer.STATE.WIN) {
 //            Gdx.app.log("Player ", "wins");
-            game.setScreen(new IntroScreen(game));
+//            Gdx.app.log("Curernt state: ", mapRenderer.getCurrentState().toString());
+//            game.setScreen(new WinningScreen(game));
+            stage.act();
+            stage.draw();
+            
+            // wait for 4 seconds, then set state of the game to PAUSED
+            executorService.schedule(new Runnable() {
+                @Override
+                public void run() {
+                    mapRenderer.setCurrentState(MapControlRenderer.STATE.PAUSED);
+                }
+            }, 4, TimeUnit.SECONDS);
+            
+        }
+        
+        // if game is paused (due to winning/losing the game) -> still, display message
+        if (mapRenderer.getCurrentState() == MapControlRenderer.STATE.PAUSED) {
+            if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+                game.setScreen(new IntroScreen(game));
+            }
+            stage.act();
+            stage.draw();
         }
     }
     
@@ -76,7 +148,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        
+        stage.dispose();
+        skin.dispose();
     }
     
 }
