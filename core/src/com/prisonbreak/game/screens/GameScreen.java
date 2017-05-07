@@ -7,7 +7,6 @@ package com.prisonbreak.game.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -106,18 +105,18 @@ public class GameScreen implements Screen {
             stage.act();
             stage.draw();
             
-            // wait for 4 seconds, then set state of the game to PAUSED
+            // wait for 4 seconds, then set state of the game to END
             executorService.schedule(new Runnable() {
                 @Override
                 public void run() {
-                    mapRenderer.setCurrentState(MapControlRenderer.STATE.PAUSED);
+                    mapRenderer.setCurrentState(MapControlRenderer.STATE.END);
                 }
             }, 4, TimeUnit.SECONDS);
             
         }
         
         // if game is paused (due to winning/losing the game) -> still, display message
-        if (mapRenderer.getCurrentState() == MapControlRenderer.STATE.PAUSED) {
+        if (mapRenderer.getCurrentState() == MapControlRenderer.STATE.END) {
             if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
                 game.setScreen(new IntroScreen(game));
             }

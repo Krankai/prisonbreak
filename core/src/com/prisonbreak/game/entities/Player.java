@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.prisonbreak.game.MapControlRenderer;
 
 /**
@@ -29,12 +30,14 @@ public class Player {
     private final Texture sheet;                // contain spritesheet for player
     private Sprite sprite;
     private MapControlRenderer renderer;               
+    private Array<Item> inventory;
     
     private boolean moveLeft;
     private boolean moveRight;
     private boolean moveUp;
     private boolean moveDown;
     private boolean sleep;      // for fun :)
+    private String currentDirection;
     
     public float x;         // position x
     public float y;         // position y
@@ -74,10 +77,24 @@ public class Player {
         sprite = new Sprite(currentTexture);
         sprite.setX(x);
         sprite.setY(y);
+        
+        // set current direction to "none"
+        currentDirection = "none";
+        
+        // initialize Player's inventory
+        inventory = new Array<Item>();
     }
     
     public Sprite getSprite() {
         return sprite;
+    }
+    
+    public String getCurrentDirection() {
+        return currentDirection;
+    }
+    
+    public Array<Item> getInventory() {
+        return inventory;
     }
     
     public void setMapControlRenderer(MapControlRenderer renderer) {
@@ -135,6 +152,13 @@ public class Player {
             sleep = false;
             currentTexture = playerFrames[0];
         }
+        
+        currentDirection = "none";
+    }
+    
+    // add item to inventory
+    public void addItem(Item item) {
+        inventory.add(item);
     }
     
     // check various kinds of collision
@@ -222,38 +246,42 @@ public class Player {
         // move player along setting direction
         if (moveLeft) {
             currentTexture = playerFrames[2];
+            currentDirection = "left";
             x -= amountX;
             
             if (haveCollision(x, y)) {
                 x += amountX;
-                moveLeft = false;
+//                moveLeft = false;
             }
         }
         if (moveRight) {
             currentTexture = playerFrames[0];
+            currentDirection = "right";
             x += amountX;
             
             if (haveCollision(x, y)) {
                 x -= amountX;
-                moveRight = false;
+//                moveRight = false;
             }
         }
         if (moveUp) {
             currentTexture = playerFrames[1];
+            currentDirection = "up";
             y += amountY;
             
             if (haveCollision(x, y)) {
                 y -= amountX;
-                moveUp = false;
+//                moveUp = false;
             }
         }
         if (moveDown) {
             currentTexture = playerFrames[0];
+            currentDirection = "down";
             y -= amountY;
             
             if (haveCollision(x, y)) {
                 y += amountY;
-                moveDown = false;
+//                moveDown = false;
             } 
        }
         
@@ -270,6 +298,8 @@ public class Player {
         if (!sleep) {
             updateMotion();
         }
+        
+//        Gdx.app.log("direction: ", getCurrentDirection());
         
         // update sprite
         sprite = new Sprite(currentTexture);
