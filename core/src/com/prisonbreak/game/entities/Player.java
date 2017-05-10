@@ -163,6 +163,7 @@ public class Player {
     
     // check various kinds of collision
     //      collision with static (blocked) objects in the map
+    //      collision with locked doors in the map
     //      collision with walls in the map
     //      ...
     private boolean haveCollision(float newX, float newY) {
@@ -172,10 +173,10 @@ public class Player {
             return true;
         }
         
-        /* With static (blocked) objects */
-        
         // get bounding rectangle of Player
         Rectangle playerBounding = new Rectangle(newX, newY, width, height);
+        
+        /* With static (blocked) objects */
         
         // consider each objects
         for (MapObject object : renderer.getStaticObjects()) {
@@ -185,6 +186,21 @@ public class Player {
                 RectangleMapObject rectObject = (RectangleMapObject) object;
                 
                 // check for overlapping ~ collision
+                if (rectObject.getRectangle().overlaps(playerBounding)) return true;
+            }
+        }
+        
+        /* End */
+        
+        /* With locked doors */
+        
+        // for each object
+        for (MapObject object : renderer.getDoorObjects()) {
+            if (object.isVisible() && (object.getProperties().get("locked", null, Boolean.class) != null)
+                    && object.getProperties().get("locked", Boolean.class)
+                    && object instanceof RectangleMapObject) {
+                RectangleMapObject rectObject = (RectangleMapObject) object;
+                
                 if (rectObject.getRectangle().overlaps(playerBounding)) return true;
             }
         }

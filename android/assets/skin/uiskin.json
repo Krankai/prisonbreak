@@ -141,6 +141,11 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		background: panel2
 	}
         custom: {
+                font: font-title,
+                fontColor: { a:1, b:1, g:1, r:1 }
+                background: panel1
+        }
+        custom-small: {
                 font: font-label,
                 fontColor: { a:1, b:1, g:1, r:1 }
                 background: panel1
@@ -160,6 +165,13 @@ com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 		selection: list-selection,
 		background: list
 	}
+        custom: {
+                font: font-title,
+		fontColorSelected: { a: 1, b: 1, g: 0.2, r: 1 },
+		fontColorUnselected: { a: 1, b: 1, g: 1, r: 1 },
+		selection: list-selection,
+		background: list
+        }
 },
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 	default: {
