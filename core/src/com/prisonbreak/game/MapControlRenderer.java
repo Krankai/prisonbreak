@@ -15,6 +15,7 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
@@ -43,7 +44,8 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     }
     private STATE state;
     public enum TYPE_INTERACTION {
-        NO_INTERACTION, SEARCH_INTERACTION, OPEN_LOCK_INTERACTION
+        NO_INTERACTION, SEARCH_INTERACTION, OPEN_LOCK_INTERACTION,
+        READ_INTERACTION
     }
     private TYPE_INTERACTION typeInteraction = TYPE_INTERACTION.NO_INTERACTION;
     
@@ -56,21 +58,29 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     private Item neededKey;                     // the required key to unlock an object (door)
     
     private int indexForMessageTree = 0;
-    private String currentDoorName = "";        // name of the current door in interaction
+    private String latestObjectName = "";       // name of the lastest object in interaction with Player
     private boolean interactHappen = false;     // flag -> indicate whether interaction happens
     private boolean inventoryOpen = false;      // flag -> indicate whether the inventory is currenly opened
-    private boolean currentDoorLocked = false;  // flag -> indicate whether the current door in interaction
+    private boolean latestDoorLocked = false;   // flag -> indicate whether the latest door in interaction
                                                 // with Player is locked or not
+    private boolean doorHidden = false;         // indicate whether the current is hidden
     
     private int[][] blockedWallUnitGrid;
     private final MapObjects interactionObjects;
     private final MapObjects staticObjects;
     private final MapObjects doorObjects;
     private final MapObject winningLocation;
+    private RectangleMapObject currentDoor;      // current door in contact, for hiding/showing unlocked door
+    
+    private TiledMapTile tile1;         // tiles that, together, represent a door object
+    private TiledMapTile tile2;         // tile1 -> lower left cell ; tile2 -> lower right cell
+    private TiledMapTile tile3;         // tile3 -> upper left cell ; tile4 -> upper right cell
+    private TiledMapTile tile4;
+//    private Array<TiledMapTile> tiles;
     
     public Stage stage;
     public Label dialogBoxLabel;
-    public Label descLabel;             // description label, for inventory
+    public Label descLabel;             // description label, for inventory and read_interaction
     public Label titleLabel;
     public List itemList;
     public List inventory;
@@ -107,6 +117,9 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         // initialize list of items, and message tree
         initializeListItems();
         initializeMessageTree();
+        
+        // initialize tiles
+//        tiles = new Array<TiledMapTile>();
         
         // create camera
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -179,7 +192,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         // add a key into wardrobe1 ; listItemID = 1
         list = new Array<Item>();
         item = new Item("Uniform", 3);
-        item.setDescription("A guard uniform.");
+        item.setDescription("Karvick's uniform.");
         list.add(item);
         listItems.add(list);
         
@@ -196,10 +209,25 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         item.setDescription("A chocolate ice cream. Very yummy.");
         list.add(item);
         item = new Item("Frozen meat", 6);
-        item.setDescription("A frozen meat. Need to be thawed if you want to cook it.");
+        item.setDescription("Ordered meat for Henry Karvick.");
         list.add(item);
         item = new Item("Bottle of drink", 7);
         item.setDescription("A bottle full of cold water. Best for hot days.");
+        list.add(item);
+        listItems.add(list);
+        
+        // add a crowbar into the racks ; listItemID = 4
+        list = new Array<Item>();
+        item = new Item("Crowbar", 8);
+        item.setDescription("A steel crowbar. Very strong and sturdy.");
+        list.add(item);
+        listItems.add(list);
+        
+        // add a crinkle letter into the draining holes (in bathroom) ; listItemID = 5
+        list = new Array<Item>();
+        item = new Item("Crinkle Letter", 9);
+        item.setDescription("The letter is in bad condition. "
+                + "You can hardly recognize any words at all, except a number '6'");
         list.add(item);
         listItems.add(list);
     }
@@ -216,9 +244,10 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         
         // message for the second case - index = 1 -> There are (many) items here
         messages = new Array<String>();
-        messages.add("You found something. Which item do you pick?");
+        messages.add("You found something. Which will you pick up?");
         messages.add("Obtained 1 x ");
         messageTree.add(messages);
+        
         
         // for open_lock_interaction
         // message for the third case - index = 2 -> The door is locked
@@ -235,6 +264,14 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         messages.add("You can lock it using");
         messages.add("Will you lock the door?");
         messages.add("The door is locked.");
+        messageTree.add(messages);
+        
+        
+        // for read interaction
+        // message for the fifth case - index = 4 -> Any readable objects
+        messages = new Array<String>();
+        messages.add("Something is written on the ");
+        messages.add("...");
         messageTree.add(messages);
     }
     
@@ -257,8 +294,9 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
 //                Gdx.app.log("Player direction: ", player.getCurrentDirection());
                 
                 // check if user faces object in correct direction
-                if (!player.getCurrentDirection().equalsIgnoreCase("none") &&
-                        player.getCurrentDirection().equalsIgnoreCase(directionCheck)) {
+                if (directionCheck.equalsIgnoreCase("all") ||
+                        (!player.getCurrentDirection().equalsIgnoreCase("none") &&
+                        player.getCurrentDirection().equalsIgnoreCase(directionCheck))) {
                     
                     // retrieve type of interaction
                     String type = rectObject.getProperties().get("type", "", String.class);
@@ -270,10 +308,13 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                         // set the flag for type of interaction
                         typeInteraction = TYPE_INTERACTION.SEARCH_INTERACTION;
                         
+                        // extract attributes' values
                         boolean haveItems = rectObject.getProperties().get("haveItems", false, Boolean.class);
                         int listID = rectObject.getProperties().get("listItemID", -1, Integer.class);
 
                         // if object does contain items
+                        //      -> return list of those items
+                        // otherwise -> return null
                         if (haveItems) {
                             // get the item objectItems ID
                             if (listID == -1)
@@ -288,6 +329,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                         // set the flag for type of interaction
                         typeInteraction = TYPE_INTERACTION.OPEN_LOCK_INTERACTION;
                         
+                        // extract attributes' values
                         boolean locked = rectObject.getProperties().get("locked", false, Boolean.class);
                         int keyID = rectObject.getProperties().get("keyID", -1, Integer.class);
                         Array<Item> needKey = new Array<Item>();
@@ -295,17 +337,17 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                         needKey.add(key);
                         
                         // extract the name of current door in interaction with Player
-                        currentDoorName = rectObject.getName();
+                        latestObjectName = rectObject.getName();
                         
                         // set the status of current door in interaction with Player
-                        currentDoorLocked = locked;
-//                        Gdx.app.log("locked: ", currentDoorLocked + "");
+                        latestDoorLocked = locked;
+//                        Gdx.app.log("locked: ", latestDoorLocked + "");
                         
                         // if the door is not locked
                         //      check the position of Player before invoking interaction
                         //      -> return the required key to lock it
-                        if (!currentDoorLocked) {
-                            MapObject o = doorObjects.get(currentDoorName);
+                        if (!latestDoorLocked) {
+                            MapObject o = doorObjects.get(latestObjectName);
                             RectangleMapObject r = (RectangleMapObject) o;
                             
                             if (!r.getRectangle().overlaps(player.getSprite().getBoundingRectangle())) {
@@ -321,6 +363,28 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                             interactHappen = true;
                             return needKey;
                         }
+                    }
+                    
+                    // if readable objects
+                    else if (type.equalsIgnoreCase("read_interaction")) {
+                        interactHappen = true;
+                        
+                        // set the flag for type of interaction
+                        typeInteraction = TYPE_INTERACTION.READ_INTERACTION;
+                        
+                        // extract attributes' values
+                        String message = rectObject.getProperties().get("message", "", String.class);
+                        
+                        // set the name of the object
+                        latestObjectName = rectObject.getProperties().get("name", "Object", String.class);
+                        
+                        // return a list with one "item" contain the message; id for item = -2
+                        Array<Item> l = new Array<Item>();
+                        Item mess = new Item("Written Message", -2);
+                        mess.setDescription(message);
+                        l.add(mess);
+                        
+                        return l;
                     }
                 }
             }
@@ -381,7 +445,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         
         player.x = rectSpawmPoint.getRectangle().getX();
         player.y = rectSpawmPoint.getRectangle().getY();
-//        player.x = 71 * 32;
+//        player.x = 70 * 32;
 //        player.y = 82 * 32;
     }
     
@@ -389,10 +453,8 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     private boolean winGame() {
         RectangleMapObject rectLoc = (RectangleMapObject) winningLocation;
         
-        if (state != STATE.END && 
-                rectLoc.getRectangle().contains(player.getSprite().getBoundingRectangle()))
-            return true;
-        return false;
+        return state != STATE.END && 
+                rectLoc.getRectangle().contains(player.getSprite().getBoundingRectangle());
     }
     
     // reset the InputProcessor to this (MapControlRenderer) (from stage)
@@ -670,7 +732,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         }
         
         // if the door is locked
-        if (currentDoorLocked) {
+        if (latestDoorLocked) {
             // end of "conversation" -> reset 
             if (indexForMessageTree == messageTree.get(2).size) {
                 state = STATE.ONGOING;
@@ -679,8 +741,8 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                 indexForMessageTree = 0;
                 
                 neededKey = null;
-                currentDoorLocked = false;
-                currentDoorName = "";
+                latestDoorLocked = false;
+//                latestObjectName = "";
                 
                 dialogBoxLabel.remove();
                 return;
@@ -751,11 +813,11 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                                 // if Player choose "Yes" -> unlock the door
                                 if (itemList.getSelectedIndex() == 0) {
                                     // set "locked" to false in object of DoorCollision
-                                    MapObject object = doorObjects.get(currentDoorName);
+                                    MapObject object = doorObjects.get(latestObjectName);
                                     object.getProperties().put("locked", false);
                                     
                                     // set "locked" to false in object of ObjectInteration
-                                    object = interactionObjects.get(currentDoorName);
+                                    object = interactionObjects.get(latestObjectName);
                                     object.getProperties().put("locked", false);
                                     
                                     // set "locked" to false in object of ...
@@ -800,8 +862,8 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                 indexForMessageTree = 0;
                 
                 neededKey = null;
-                currentDoorLocked = false;
-                currentDoorName = "";
+                latestDoorLocked = false;
+//                latestObjectName = "";
                 
                 dialogBoxLabel.remove();
                 return;
@@ -871,11 +933,11 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                                 // if Player choose "Yes" -> lock the door
                                 if (itemList.getSelectedIndex() == 0) {
                                     // set "locked" to true in object of DoorCollision
-                                    MapObject object = doorObjects.get(currentDoorName);
+                                    MapObject object = doorObjects.get(latestObjectName);
                                     object.getProperties().put("locked", true);
                                     
                                     // set "locked" to true in object of ObjectInteration
-                                    object = interactionObjects.get(currentDoorName);
+                                    object = interactionObjects.get(latestObjectName);
                                     object.getProperties().put("locked", true);
                                     
                                     // set "locked" to true in object of ...
@@ -912,11 +974,129 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         }
     }
     
+    // carry out read interaction
+    private void readInteraction() {
+        if (objectItems == null) {
+            Gdx.app.log("Error in read_interaction: ", "objectItems == null");
+            return;
+        }
+        
+        // end of conversation -> reset
+        if (indexForMessageTree == messageTree.get(4).size) {
+            state = STATE.ONGOING;
+            interactHappen = false;
+            typeInteraction = TYPE_INTERACTION.NO_INTERACTION;
+            indexForMessageTree = 0;
+            
+            dialogBoxLabel.remove();    // remove actors from stage
+            return;
+        }
+        
+        // first
+        if (indexForMessageTree == 0) {
+            // create conversation box
+            dialogBoxLabel = new Label(messageTree.get(4).get(0) + latestObjectName + ".", skin, "custom");
+            dialogBoxLabel.setPosition(0, 0);
+            dialogBoxLabel.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/5);
+            dialogBoxLabel.setAlignment(Align.topLeft);
+            stage.addActor(dialogBoxLabel);
+        }
+        // second -> display along the message written on the object
+        else if (indexForMessageTree == 1) {
+            // set the test of conversation box
+            dialogBoxLabel.setText(messageTree.get(4).get(1));
+            
+            // create description/message box to display the written message
+            descLabel = new Label("\"" + objectItems.get(0).getDescription() + "\"", skin, "custom");
+            descLabel.setSize(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+            descLabel.setPosition(Gdx.graphics.getWidth()/2 - descLabel.getWidth()/2,
+                    Gdx.graphics.getHeight()*3/5 - descLabel.getHeight()/2);
+            descLabel.setAlignment(Align.topLeft);
+            descLabel.setWrap(true);
+            descLabel.addListener(new InputListener() {
+                @Override
+                public boolean keyDown(InputEvent event, int keycode) {
+                    // if user presses F again, "turn off" the displayed message
+                    if (keycode == Keys.F) {
+                        descLabel.remove();     // remove the message label
+                        resetInputProcessor();  // reset the InputProcessor to MapControlRenderer
+                        return true;
+                    }
+                    
+                    return false;
+                }
+            });
+            stage.addActor(descLabel);
+            stage.setKeyboardFocus(descLabel);
+            
+            // set InputProcessor to stage
+            Gdx.input.setInputProcessor(stage);
+        }
+        // others
+        else {
+            dialogBoxLabel.setText(messageTree.get(4).get(indexForMessageTree));
+        }
+        
+        ++indexForMessageTree;
+    }
+    
     @Override
     public void render() {
         if (state != STATE.END && state != STATE.PAUSE) {
             player.update();
             moveCamera();
+            
+            // search for the door in contact
+            for (Object o : doorObjects) {
+                RectangleMapObject r = null;
+                if (o instanceof RectangleMapObject) {
+                    r = (RectangleMapObject) o;
+                }
+                
+                if (r != null && r.getRectangle().overlaps(player.getSprite().getBoundingRectangle())) {
+                    currentDoor = r;
+                    break;
+                }
+            }
+            
+            // the door "disappears" when Player steps in
+            // and "showed" again when Player steps out
+            if (currentDoor != null) {                
+                int x = currentDoor.getProperties().get("lowerLeftX", Integer.class);
+                int y = currentDoor.getProperties().get("lowerLeftY", Integer.class);
+                String name = currentDoor.getProperties().get("tileLayerName", String.class);
+                TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(name);
+                
+                // if the door has not been hidden, and Player steps in -> hide the door
+                if (!currentDoor.getProperties().get("locked", Boolean.class) && !doorHidden &&
+                        currentDoor.getRectangle().overlaps(player.getSprite().getBoundingRectangle())) {
+                    // extract the tiles
+                    tile1 = layer.getCell(x, y).getTile();            // lower left
+                    tile2 = layer.getCell(x + 1, y).getTile();        // lower right
+                    tile3 = layer.getCell(x, y + 1).getTile();        // upper left
+                    tile4 = layer.getCell(x + 1, y + 1).getTile();    // upper right
+                    
+                    // "hide" the door when Player steps in
+                    layer.getCell(x, y).setTile(null);
+                    layer.getCell(x + 1, y).setTile(null);
+                    layer.getCell(x, y + 1).setTile(null);
+                    layer.getCell(x + 1, y + 1).setTile(null);
+                    
+                    doorHidden = true;      // set the flag
+                }
+                
+                // if the door is currently hidden, and Player steps out -> show it
+                if (!currentDoor.getProperties().get("locked", Boolean.class) && doorHidden &&
+                        !currentDoor.getRectangle().overlaps(player.getSprite().getBoundingRectangle())) {
+                    // "show" the door when Player steps out
+                    layer.getCell(x, y).setTile(tile1);
+                    layer.getCell(x + 1, y).setTile(tile2);
+                    layer.getCell(x, y + 1).setTile(tile3);
+                    layer.getCell(x + 1, y + 1).setTile(tile4);
+                    
+                    doorHidden = false;
+                }
+            }
             
             // update winning state
             if (winGame()) state = STATE.WIN;
@@ -1026,9 +1206,16 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                 else if (typeInteraction == TYPE_INTERACTION.OPEN_LOCK_INTERACTION) {
                     openLockInteraction();
                 }
+                
+                // for read_interaction
+                else if (typeInteraction == TYPE_INTERACTION.READ_INTERACTION) {
+                    readInteraction();
+                }
+                
                 break;
             case Input.Keys.I:
-                showHideInventory();
+                if (state != STATE.PAUSE)
+                    showHideInventory();
                 break;
             default:
                 break;

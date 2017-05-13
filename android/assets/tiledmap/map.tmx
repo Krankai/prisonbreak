@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="218">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="264">
  <tileset firstgid="1" name="materials" tilewidth="32" tileheight="32" tilecount="4096" columns="64">
   <image source="../tilesheets/materials.jpg" width="2048" height="2048"/>
  </tileset>
@@ -230,16 +230,16 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4227,4228,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4291,4292,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5419,5420,0,0,5231,5232,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7192,7193,7194,7195,0,5295,5296,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7256,7257,7258,7259,0,5359,5360,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5183,5184,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5183,5184,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5247,5248,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5247,5248,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5311,5312,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5311,5312,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4229,4230,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5375,5376,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5375,5376,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4293,4294,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5311,5312,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5311,5312,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4229,4230,0,0,0,0,4099,4100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5375,5376,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5375,5376,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4293,4294,0,0,0,0,4163,4164,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5439,5440,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5439,5440,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5503,5504,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5503,5504,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5567,5568,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5567,5568,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -251,8 +251,8 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5185,5186,5187,5188,0,0,5185,5186,5187,5188,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6628,6629,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4385,4386,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4449,4450,0,0,0,0,0,0,0,0,0,0,6628,6629,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4493,4494,0,0,0,0,0,0,0,0,0,0,4493,4494,0,0,0,0,0,0,0,0,0,0,4493,4494,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6692,6693,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4557,4558,0,0,0,0,0,0,0,0,0,0,4557,4558,0,0,0,0,0,0,0,0,0,0,4557,4558,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5257,5258,0,0,0,0,0,0,0,0,6756,6757,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5321,5322,0,0,0,0,0,0,0,0,6820,6821,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -261,8 +261,8 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4383,4384,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4447,4448,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4493,4494,4619,4620,0,0,4619,4620,0,0,4619,4620,4493,4494,4619,4620,0,0,4619,4620,0,0,4619,4620,4493,4494,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -271,8 +271,8 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4227,4228,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4291,4292,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4227,4228,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4383,4384,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4291,4292,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4447,4448,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,4481,4482,0,0,0,0,4481,4482,0,0,0,0,4481,4482,0,0,0,0,4481,4482,0,0,0,0,4481,4482,0,0,0,0,4481,4482,0,0,4365,4366,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,4545,4546,0,0,0,0,4545,4546,0,0,0,0,4545,4546,0,0,0,0,4545,4546,0,0,0,0,4545,4546,0,0,0,0,4545,4546,0,0,4429,4430,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6475,6476,6477,6478,6479,6480,6481,6482,6483,6484,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,4609,4610,0,0,0,0,4609,4610,0,0,0,0,4609,4610,0,0,0,0,4609,4610,0,0,0,0,4609,4610,0,0,0,0,4609,4610,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6539,6540,6541,6542,6543,6544,6545,6546,6547,6548,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -291,8 +291,8 @@
 0,0,0,0,0,0,0,0,0,0,0,0,4801,4802,4677,4678,4679,4680,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6529,6530,6531,6532,6533,6534,6535,6536,6537,6538,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4355,4356,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6593,6594,6595,6596,6597,6598,6599,6600,6601,6602,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4419,4420,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4353,4354,0,0,0,0,4353,4354,0,0,0,0,4353,4354,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6475,6476,6477,6478,6479,6480,6481,6482,6483,6484,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4417,4418,0,0,0,0,4417,4418,0,0,0,0,4417,4418,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6539,6540,6541,6542,6543,6544,6545,6546,6547,6548,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6475,6476,6477,6478,6479,6480,6481,6482,6483,6484,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6539,6540,6541,6542,6543,6544,6545,6546,6547,6548,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,4737,4738,4613,4614,4615,4616,0,0,0,0,0,0,0,0,0,0,0,0,4481,4482,0,0,0,0,4481,4482,0,0,0,0,4481,4482,0,0,0,0,6789,6790,6791,6792,0,0,0,0,0,0,0,0,0,0,0,0,6603,6604,6605,6606,6607,6608,6609,6610,6611,6612,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,4801,4802,4677,4678,4679,4680,0,0,0,0,0,0,0,0,0,0,0,0,4545,4546,0,0,0,0,4545,4546,0,0,0,0,4545,4546,0,0,0,0,6853,6854,6855,6856,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4355,4356,0,0,0,0,0,0,0,0,0,0,4609,4610,0,0,0,0,4609,4610,0,0,0,0,4609,4610,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6465,6466,6467,6468,6469,6470,6471,6472,6473,6474,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -499,16 +499,16 @@
 0,0,0,0,0,0,0,0,0,0,0,3221230217,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4941,4942,4943,4944,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4353,4354,0,0,0,0,4353,4354,0,0,0,0,4353,4354,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4417,4418,0,0,0,0,4417,4418,0,0,0,0,4417,4418,0,0,4941,4942,4943,4944,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,3221230281,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,3221230217,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6733,6734,0,0,5803,5804,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6797,6798,0,0,5867,5868,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,6731,6732,6731,6732,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6861,6862,0,0,5931,5932,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,6795,6796,6795,6796,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,6859,6860,6859,6860,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,5225,5226,6731,6732,6731,6732,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6861,6862,0,0,5931,5932,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,5289,5290,6795,6796,6795,6796,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,5353,5354,6859,6860,6859,6860,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,3221230287,0,0,0,0,0,0,4753,4754,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -1175,12 +1175,12 @@
     <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="169" name="controlMachine12" x="1664" y="2496" width="60.5" height="51.5">
+  <object id="169" name="controlMachine12" x="1670.33" y="2496" width="54.1667" height="51.5">
    <properties>
     <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="170" name="wardrobe12" x="1540" y="2502" width="57" height="57.5">
+  <object id="170" name="wardrobe12" x="1540" y="2502" width="54.6667" height="57.5">
    <properties>
     <property name="blocked" type="bool" value="true"/>
    </properties>
@@ -1195,7 +1195,7 @@
     <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="173" name="eatingTable1" x="2051.33" y="1785.33" width="312.667" height="20">
+  <object id="173" name="eatingTable1" x="2051.33" y="1787.83" width="312.667" height="17.5">
    <properties>
     <property name="blocked" type="bool" value="true"/>
    </properties>
@@ -1260,7 +1260,7 @@
     <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="187" name="tree3" x="957.333" y="636.667" width="7.33333" height="28">
+  <object id="187" name="tree3" x="957.333" y="636.667" width="5.33333" height="28">
    <properties>
     <property name="blocked" type="bool" value="true"/>
    </properties>
@@ -1335,19 +1335,155 @@
     <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
- </objectgroup>
- <objectgroup name="DoorCollision">
-  <object id="214" name="cellDoor2" x="595.176" y="1920" width="25.06" height="52.5141">
+  <object id="252" name="racks" x="384" y="2560" width="64" height="56">
    <properties>
-    <property name="contactDirection" value="up"/>
-    <property name="keyID" type="int" value="-1"/>
-    <property name="locked" type="bool" value="true"/>
-    <property name="type" value="open_lock_interaction"/>
+    <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="217" name="cellDoor11" x="1427.38" y="2336" width="25.06" height="32">
+ </objectgroup>
+ <objectgroup name="DoorCollision">
+  <object id="214" name="cellDoor2" x="576" y="1920" width="64" height="9.33333">
    <properties>
     <property name="locked" type="bool" value="true"/>
+    <property name="lowerLeftX" type="int" value="18"/>
+    <property name="lowerLeftY" type="int" value="38"/>
+    <property name="tileLayerName" value="RearObjects"/>
+   </properties>
+  </object>
+  <object id="217" name="cellDoor11" x="1408" y="2358" width="64" height="4">
+   <properties>
+    <property name="locked" type="bool" value="true"/>
+    <property name="lowerLeftX" type="int" value="44"/>
+    <property name="lowerLeftY" type="int" value="26"/>
+    <property name="tileLayerName" value="FrontObjects"/>
+   </properties>
+  </object>
+  <object id="221" name="cellDoor3" x="768" y="1920" width="64" height="9.33333">
+   <properties>
+    <property name="locked" type="bool" value="true"/>
+    <property name="lowerLeftX" type="int" value="24"/>
+    <property name="lowerLeftY" type="int" value="38"/>
+    <property name="tileLayerName" value="RearObjects"/>
+   </properties>
+  </object>
+  <object id="223" name="cellDoor4" x="960" y="1920" width="64" height="9.33333">
+   <properties>
+    <property name="locked" type="bool" value="true"/>
+    <property name="lowerLeftX" type="int" value="30"/>
+    <property name="lowerLeftY" type="int" value="38"/>
+    <property name="tileLayerName" value="RearObjects"/>
+   </properties>
+  </object>
+  <object id="225" name="cellDoor5" x="1152" y="1920" width="64" height="9.33333">
+   <properties>
+    <property name="locked" type="bool" value="true"/>
+    <property name="lowerLeftX" type="int" value="36"/>
+    <property name="lowerLeftY" type="int" value="38"/>
+    <property name="tileLayerName" value="RearObjects"/>
+   </properties>
+  </object>
+  <object id="227" name="cellDoor6" x="1344" y="1920" width="64" height="9.33333">
+   <properties>
+    <property name="locked" type="bool" value="true"/>
+    <property name="lowerLeftX" type="int" value="42"/>
+    <property name="lowerLeftY" type="int" value="38"/>
+    <property name="tileLayerName" value="RearObjects"/>
+   </properties>
+  </object>
+  <object id="229" name="cellDoor10" x="1216" y="2358" width="64" height="10">
+   <properties>
+    <property name="locked" type="bool" value="true"/>
+    <property name="lowerLeftX" type="int" value="38"/>
+    <property name="lowerLeftY" type="int" value="26"/>
+    <property name="tileLayerName" value="FrontObjects"/>
+   </properties>
+  </object>
+  <object id="231" name="cellDoor13" x="1024" y="2358" width="64" height="10">
+   <properties>
+    <property name="locked" type="bool" value="true"/>
+    <property name="lowerLeftX" type="int" value="32"/>
+    <property name="lowerLeftY" type="int" value="26"/>
+    <property name="tileLayerName" value="FrontObjects"/>
+   </properties>
+  </object>
+  <object id="233" name="cellDoor7" x="608" y="2240" width="3.66667" height="64">
+   <properties>
+    <property name="locked" type="bool" value="true"/>
+    <property name="lowerLeftX" type="int" value="18"/>
+    <property name="lowerLeftY" type="int" value="28"/>
+    <property name="tileLayerName" value="RearObjects"/>
+   </properties>
+  </object>
+  <object id="235" name="cellDoor8" x="608" y="2432" width="3.66667" height="64">
+   <properties>
+    <property name="locked" type="bool" value="true"/>
+    <property name="lowerLeftX" type="int" value="18"/>
+    <property name="lowerLeftY" type="int" value="22"/>
+    <property name="tileLayerName" value="RearObjects"/>
+   </properties>
+  </object>
+  <object id="237" name="dinningRoomDoor1" x="1856" y="2112" width="2.66667" height="64">
+   <properties>
+    <property name="locked" type="bool" value="false"/>
+    <property name="lowerLeftX" type="int" value="57"/>
+    <property name="lowerLeftY" type="int" value="32"/>
+    <property name="tileLayerName" value="RearObjects"/>
+   </properties>
+  </object>
+  <object id="238" name="dinningRoomDoor2" x="2368" y="1668" width="64" height="3.5">
+   <properties>
+    <property name="locked" type="bool" value="false"/>
+    <property name="lowerLeftX" type="int" value="74"/>
+    <property name="lowerLeftY" type="int" value="46"/>
+    <property name="tileLayerName" value="RearObjects"/>
+   </properties>
+  </object>
+  <object id="239" name="kitchenDoor1" x="2368" y="1347.5" width="64" height="2.5">
+   <properties>
+    <property name="locked" type="bool" value="false"/>
+    <property name="lowerLeftX" type="int" value="74"/>
+    <property name="lowerLeftY" type="int" value="56"/>
+    <property name="tileLayerName" value="RearObjects"/>
+   </properties>
+  </object>
+  <object id="240" name="kitchenDoor2" x="2013.67" y="1024" width="3.33333" height="64">
+   <properties>
+    <property name="locked" type="bool" value="false"/>
+    <property name="lowerLeftX" type="int" value="62"/>
+    <property name="lowerLeftY" type="int" value="66"/>
+    <property name="tileLayerName" value="RearObjects"/>
+   </properties>
+  </object>
+  <object id="241" name="cellsRoomDoor" x="1600" y="1669" width="64" height="4.33333">
+   <properties>
+    <property name="locked" type="bool" value="true"/>
+    <property name="lowerLeftX" type="int" value="50"/>
+    <property name="lowerLeftY" type="int" value="46"/>
+    <property name="tileLayerName" value="RearObjects"/>
+   </properties>
+  </object>
+  <object id="245" name="officeDoor2" x="2142" y="608" width="2.5" height="64">
+   <properties>
+    <property name="locked" type="bool" value="false"/>
+    <property name="lowerLeftX" type="int" value="66"/>
+    <property name="lowerLeftY" type="int" value="79"/>
+    <property name="tileLayerName" value="RearObjects"/>
+   </properties>
+  </object>
+  <object id="246" name="finalDoor" x="1984" y="356.5" width="64" height="4.33333">
+   <properties>
+    <property name="locked" type="bool" value="true"/>
+    <property name="lowerLeftX" type="int" value="62"/>
+    <property name="lowerLeftY" type="int" value="87"/>
+    <property name="tileLayerName" value="RearObjects"/>
+   </properties>
+  </object>
+  <object id="263" name="officeDoor1" x="1952.33" y="609.5" width="2.83333" height="64">
+   <properties>
+    <property name="locked" type="bool" value="true"/>
+    <property name="lowerLeftX" type="int" value="60"/>
+    <property name="lowerLeftY" type="int" value="79"/>
+    <property name="tileLayerName" value="RearObjects"/>
    </properties>
   </object>
  </objectgroup>
@@ -1355,7 +1491,7 @@
   <object id="26" name="spawmPoint" x="384" y="1728" width="64" height="64"/>
   <object id="27" name="winningPoint" x="1920" y="0" width="192" height="96"/>
  </objectgroup>
- <objectgroup name="ObjectInteraction" visible="0">
+ <objectgroup name="ObjectInteraction">
   <object id="204" name="garbageBin1" x="448" y="2048" width="16" height="64">
    <properties>
     <property name="contactDirection" value="left"/>
@@ -1364,14 +1500,14 @@
     <property name="type" value="search_interaction"/>
    </properties>
   </object>
-  <object id="205" name="garbageBin2" x="832" y="2756" width="64" height="16">
+  <object id="205" name="garbageBin2" x="832" y="2758" width="64" height="16">
    <properties>
     <property name="contactDirection" value="down"/>
     <property name="haveItems" type="bool" value="false"/>
     <property name="type" value="search_interaction"/>
    </properties>
   </object>
-  <object id="206" name="garbageBin3" x="1536" y="1792" width="64" height="16">
+  <object id="206" name="garbageBin3" x="1536" y="1785" width="61" height="16">
    <properties>
     <property name="contactDirection" value="up"/>
     <property name="haveItems" type="bool" value="false"/>
@@ -1416,7 +1552,7 @@
     <property name="type" value="search_interaction"/>
    </properties>
   </object>
-  <object id="215" name="cellDoor2" x="586.823" y="1982.88" width="40.7226" height="14.6184">
+  <object id="215" name="cellDoor2" x="586.823" y="1929.88" width="40.7226" height="14.6184">
    <properties>
     <property name="contactDirection" value="up"/>
     <property name="keyID" type="int" value="-1"/>
@@ -1424,12 +1560,183 @@
     <property name="type" value="open_lock_interaction"/>
    </properties>
   </object>
-  <object id="216" name="cellDoor11" x="1421.11" y="2320" width="40.7226" height="16">
+  <object id="216" name="cellDoor11" x="1421.11" y="2342.33" width="40.7226" height="16">
    <properties>
     <property name="contactDirection" value="down"/>
     <property name="keyID" type="int" value="1"/>
     <property name="locked" type="bool" value="true"/>
     <property name="type" value="open_lock_interaction"/>
+   </properties>
+  </object>
+  <object id="222" name="cellDoor3" x="780.156" y="1929.55" width="40.7226" height="14.6184">
+   <properties>
+    <property name="contactDirection" value="up"/>
+    <property name="keyID" type="int" value="-1"/>
+    <property name="locked" type="bool" value="true"/>
+    <property name="type" value="open_lock_interaction"/>
+   </properties>
+  </object>
+  <object id="224" name="cellDoor4" x="970.656" y="1929.55" width="40.7226" height="14.6184">
+   <properties>
+    <property name="contactDirection" value="up"/>
+    <property name="keyID" type="int" value="-1"/>
+    <property name="locked" type="bool" value="true"/>
+    <property name="type" value="open_lock_interaction"/>
+   </properties>
+  </object>
+  <object id="226" name="cellDoor5" x="1163.66" y="1929.05" width="40.7226" height="14.6184">
+   <properties>
+    <property name="contactDirection" value="up"/>
+    <property name="keyID" type="int" value="-1"/>
+    <property name="locked" type="bool" value="true"/>
+    <property name="type" value="open_lock_interaction"/>
+   </properties>
+  </object>
+  <object id="228" name="cellDoor6" x="1356.16" y="1929.05" width="40.7226" height="14.6184">
+   <properties>
+    <property name="contactDirection" value="up"/>
+    <property name="keyID" type="int" value="-1"/>
+    <property name="locked" type="bool" value="true"/>
+    <property name="type" value="open_lock_interaction"/>
+   </properties>
+  </object>
+  <object id="230" name="cellDoor10" x="1228.11" y="2342.33" width="40.7226" height="16">
+   <properties>
+    <property name="contactDirection" value="down"/>
+    <property name="keyID" type="int" value="-1"/>
+    <property name="locked" type="bool" value="true"/>
+    <property name="type" value="open_lock_interaction"/>
+   </properties>
+  </object>
+  <object id="232" name="cellDoor13" x="1036.61" y="2341.83" width="40.7226" height="16">
+   <properties>
+    <property name="contactDirection" value="down"/>
+    <property name="keyID" type="int" value="-1"/>
+    <property name="locked" type="bool" value="true"/>
+    <property name="type" value="open_lock_interaction"/>
+   </properties>
+  </object>
+  <object id="234" name="cellDoor7" x="611.823" y="2255.55" width="10.0559" height="32">
+   <properties>
+    <property name="contactDirection" value="left"/>
+    <property name="keyID" type="int" value="-1"/>
+    <property name="locked" type="bool" value="true"/>
+    <property name="type" value="open_lock_interaction"/>
+   </properties>
+  </object>
+  <object id="236" name="cellDoor8" x="611.49" y="2447.88" width="10.0559" height="32">
+   <properties>
+    <property name="contactDirection" value="left"/>
+    <property name="keyID" type="int" value="-1"/>
+    <property name="locked" type="bool" value="true"/>
+    <property name="type" value="open_lock_interaction"/>
+   </properties>
+  </object>
+  <object id="242" name="cellsRoomDoor" x="1611.66" y="1673.55" width="40.7226" height="14.6184">
+   <properties>
+    <property name="contactDirection" value="up"/>
+    <property name="keyID" type="int" value="4"/>
+    <property name="locked" type="bool" value="true"/>
+    <property name="type" value="open_lock_interaction"/>
+   </properties>
+  </object>
+  <object id="247" name="finalDoor" x="1995.66" y="361.05" width="40.7226" height="14.6184">
+   <properties>
+    <property name="contactDirection" value="up"/>
+    <property name="keyID" type="int" value="-1"/>
+    <property name="locked" type="bool" value="true"/>
+    <property name="type" value="open_lock_interaction"/>
+   </properties>
+  </object>
+  <object id="248" name="computer" x="1589.17" y="2408.67" width="11.3333" height="3.33333">
+   <properties>
+    <property name="contactDirection" value="up"/>
+    <property name="message" value="01101011 01101001 01110100 01100011 01101000 01100101 01101110 00100000 01100011 01101111 01110010 01101110 01100101 01110010 "/>
+    <property name="name" value="computer"/>
+    <property name="type" value="read_interaction"/>
+   </properties>
+  </object>
+  <object id="249" name="controlMachine" x="1662" y="2519.67" width="7.66667" height="13.6667">
+   <properties>
+    <property name="contactDirection" value="right"/>
+    <property name="message" value="__ __ __ 3"/>
+    <property name="name" value="control machine"/>
+    <property name="type" value="read_interaction"/>
+   </properties>
+  </object>
+  <object id="250" name="kitchenCorner" x="2400" y="2544" width="32" height="16">
+   <properties>
+    <property name="contactDirection" value="down"/>
+    <property name="message" value="The treasure is hidden at the lone pillar of the non-ceil room."/>
+    <property name="name" value="wall"/>
+    <property name="type" value="read_interaction"/>
+   </properties>
+  </object>
+  <object id="251" name="tree" x="957" y="628" width="6" height="8">
+   <properties>
+    <property name="contactDirection" value="down"/>
+    <property name="message" value="__ 8 __ __"/>
+    <property name="name" value="tree"/>
+    <property name="type" value="read_interaction"/>
+   </properties>
+  </object>
+  <object id="262" name="officeNote" x="2262.75" y="482.5" width="5.25" height="4.25">
+   <properties>
+    <property name="contactDirection" value="up"/>
+    <property name="message" value="More than three thousands ... A very large number, but only the first is certain. Is it enough? What are the missing pieces?"/>
+    <property name="name" value="notebook"/>
+    <property name="type" value="read_interaction"/>
+   </properties>
+  </object>
+  <object id="253" name="racks" x="409.075" y="2616.44" width="15.1331" height="8">
+   <properties>
+    <property name="contactDirection" value="up"/>
+    <property name="haveItems" type="bool" value="true"/>
+    <property name="listItemID" type="int" value="4"/>
+    <property name="type" value="search_interaction"/>
+   </properties>
+  </object>
+  <object id="256" name="drainingHoles4" x="984" y="1496" width="16" height="16">
+   <properties>
+    <property name="contactDirection" value="all"/>
+    <property name="haveItems" type="bool" value="true"/>
+    <property name="listItemID" type="int" value="5"/>
+    <property name="type" value="search_interaction"/>
+   </properties>
+  </object>
+  <object id="257" name="drainingHoles1" x="599.6" y="1496" width="16" height="16">
+   <properties>
+    <property name="contactDirection" value="all"/>
+    <property name="haveItems" type="bool" value="false"/>
+    <property name="type" value="search_interaction"/>
+   </properties>
+  </object>
+  <object id="258" name="drainingHoles2" x="600" y="1112" width="16" height="16">
+   <properties>
+    <property name="contactDirection" value="all"/>
+    <property name="haveItems" type="bool" value="false"/>
+    <property name="type" value="search_interaction"/>
+   </properties>
+  </object>
+  <object id="259" name="drainingHoles3" x="984" y="1112" width="16" height="16">
+   <properties>
+    <property name="contactDirection" value="all"/>
+    <property name="haveItems" type="bool" value="false"/>
+    <property name="type" value="search_interaction"/>
+   </properties>
+  </object>
+  <object id="260" name="drainingHoles5" x="1368" y="1112" width="16" height="16">
+   <properties>
+    <property name="contactDirection" value="all"/>
+    <property name="haveItems" type="bool" value="false"/>
+    <property name="type" value="search_interaction"/>
+   </properties>
+  </object>
+  <object id="261" name="drainingHoles6" x="1368" y="1496" width="16" height="16">
+   <properties>
+    <property name="contactDirection" value="all"/>
+    <property name="haveItems" type="bool" value="false"/>
+    <property name="type" value="search_interaction"/>
    </properties>
   </object>
  </objectgroup>
