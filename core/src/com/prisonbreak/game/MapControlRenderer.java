@@ -26,6 +26,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.prisonbreak.game.entities.Item;
@@ -45,7 +48,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     private STATE state;
     public enum TYPE_INTERACTION {
         NO_INTERACTION, SEARCH_INTERACTION, OPEN_LOCK_INTERACTION,
-        READ_INTERACTION
+        READ_INTERACTION, PASS_UNLOCK_INTERACTION, BREAK_INTERACTION
     }
     private TYPE_INTERACTION typeInteraction = TYPE_INTERACTION.NO_INTERACTION;
     
@@ -58,6 +61,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     private Item neededKey;                     // the required key to unlock an object (door)
     
     private int indexForMessageTree = 0;
+    private int indexRemainingItems = 1;        // for safe locker (pass_unlock_interaction)
     private String latestObjectName = "";       // name of the lastest object in interaction with Player
     private boolean interactHappen = false;     // flag -> indicate whether interaction happens
     private boolean inventoryOpen = false;      // flag -> indicate whether the inventory is currenly opened
@@ -84,6 +88,8 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     public Label titleLabel;
     public List itemList;
     public List inventory;
+    public TextField passField;         // to enter password -> unlock objects
+    public TextButton txtButton;
     public final Skin skin;
     
     public MapControlRenderer(TiledMap map) {
@@ -146,6 +152,10 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         return blockedWallUnitGrid;
     }
     
+    public MapObjects getInteractionObjects() {
+        return interactionObjects;
+    }
+    
     public MapObjects getStaticObjects() {
         return staticObjects;
     }
@@ -192,7 +202,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         // add a key into wardrobe1 ; listItemID = 1
         list = new Array<Item>();
         item = new Item("Uniform", 3);
-        item.setDescription("Karvick's uniform.");
+        item.setDescription("Karvick's uniform. There is an identity card in his pocket. Maybe you can make use of it ...");
         list.add(item);
         listItems.add(list);
         
@@ -228,6 +238,16 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         item = new Item("Crinkle Letter", 9);
         item.setDescription("The letter is in bad condition. "
                 + "You can hardly recognize any words at all, except a number '6'");
+        list.add(item);
+        listItems.add(list);
+        
+        // add the final key + an airplane ticket into the safe locker ; listItemID = 6
+        list = new Array<Item>();
+        item = new Item("Final Key", 10);
+        item.setDescription("THIS IS THE KEY TO FREEDOM. Now, you only need to find the door to use it in.");
+        list.add(item);
+        item = new Item("Airplane Ticket", 11);
+        item.setDescription("XXX Airlines.\nDATE: 12 Mar, 2025\nFLIGHT HOUR: 16:30\nFROM: Lanbagana, Homoca\nTO: Malag, Facas");
         list.add(item);
         listItems.add(list);
     }
@@ -272,6 +292,33 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         messages = new Array<String>();
         messages.add("Something is written on the ");
         messages.add("...");
+        messageTree.add(messages);
+        
+        
+        // for pass-unlock interaction (use password to unlock objects)
+        // message for the sixth case - index = 5 -> Door with password lock
+        messages = new Array<String>();
+        messages.add("The door is locked.");
+        messages.add("There is a card holder at the handle. Use the card obtained with the uniform?");
+        messages.add("A voice prompts for your identity ...");
+        messages.add("The door is unlocked.");
+        messageTree.add(messages);
+        
+        // message for the seventh case - index = 6 -> Safe locker with passwork lock
+        messages = new Array<String>();
+        messages.add("Enter the correct password to open.");
+        messages.add("The safe locker has been unlocked");
+        messages.add("Obtain 1 x ");
+        messageTree.add(messages);
+        
+        
+        // for break interaction (with door)
+        // message for the eigth case - index = 7 -> Break the (office) door
+        messages = new Array<String>();
+        messages.add("The door is locked.");
+        messages.add("You can break it using ");
+        messages.add("Will you break the door?");
+        messages.add("The door has been cracked open.");
         messageTree.add(messages);
     }
     
@@ -326,9 +373,6 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                     
                     // if door object (open_lock_interaction)
                     else if (type.equalsIgnoreCase("open_lock_interaction")) {
-                        // set the flag for type of interaction
-                        typeInteraction = TYPE_INTERACTION.OPEN_LOCK_INTERACTION;
-                        
                         // extract attributes' values
                         boolean locked = rectObject.getProperties().get("locked", false, Boolean.class);
                         int keyID = rectObject.getProperties().get("keyID", -1, Integer.class);
@@ -352,6 +396,10 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                             
                             if (!r.getRectangle().overlaps(player.getSprite().getBoundingRectangle())) {
                                 interactHappen = true;
+                                
+                                // set the flag for type of interaction
+                                typeInteraction = TYPE_INTERACTION.OPEN_LOCK_INTERACTION;
+                                
                                 return needKey;
                             }
                         }
@@ -361,6 +409,10 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                         //                   that the door CANNOT be opened
                         else {
                             interactHappen = true;
+                            
+                            // set the flag for type of interaction
+                            typeInteraction = TYPE_INTERACTION.OPEN_LOCK_INTERACTION;
+                            
                             return needKey;
                         }
                     }
@@ -385,6 +437,76 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                         l.add(mess);
                         
                         return l;
+                    }
+                    
+                    // if password locking objects
+                    else if (type.equalsIgnoreCase("pass_unlock_interaction")) {
+                        boolean locked = rectObject.getProperties().get("locked", false, Boolean.class);
+                        
+                        // if the object has already been unlocked
+                        //      -> return null; no interaction happens
+                        if (!locked) {
+                            return null;
+                        }
+                        // otherwise
+                        //      -> return a list with first "item" containing the password,
+                        //          and all the remaining items are ones that are inside
+                        //          the object (in case of safe locker)
+                        else {
+                            interactHappen = true;
+                            
+                            // set the flag indicating the type of interaction
+                            typeInteraction = TYPE_INTERACTION.PASS_UNLOCK_INTERACTION;
+                            
+                            // extract the name of object in interaction
+                            latestObjectName = rectObject.getName();
+                            
+                            // extract attributes
+                            String password = rectObject.getProperties().get("pass", "", String.class);
+                            Item passItem = new Item("Password", -3);   // item contains password
+                            passItem.setDescription(password);
+                            
+                            // create the list
+                            Array<Item> list = new Array<Item>();
+                            list.add(passItem);
+                            
+                            // if safe locker, add all the contained items into the list
+                            int listID = rectObject.getProperties().get("listItemID", -1, Integer.class);
+                            if (listID == -1) {
+                                Gdx.app.log("Error: ", "listItemID attribute not found");
+                            } else {
+                                list.addAll(listItems.get(listID));
+                            }
+                            
+                            return list;
+                        }
+                    }
+                    
+                    // if breakable object (here, break the office door)
+                    else if (type.equalsIgnoreCase("break_interaction")) {
+                        boolean broken = rectObject.getProperties().get("broken", true, Boolean.class);
+                        
+                        // if object has been cracked open (broken = true)
+                        //      -> do nothing, no interaction happens, return null
+                        if (broken) {
+                            return null;
+                        }
+                        // otherwise
+                        //      -> return the required item to break the object (door), which is a crowbar in this game
+                        else {
+                            interactHappen = true;
+                            typeInteraction = TYPE_INTERACTION.BREAK_INTERACTION;
+                            
+                            // extract the name of object in interaction
+                            latestObjectName = rectObject.getName();
+                            
+                            int id = rectObject.getProperties().get("breakItemID", Integer.class);
+                            Item item = new Item("Required Item", id);
+                            Array<Item> l = new Array<Item>();
+                            l.add(item);
+                            
+                            return l;
+                        }
                     }
                 }
             }
@@ -445,8 +567,8 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         
         player.x = rectSpawmPoint.getRectangle().getX();
         player.y = rectSpawmPoint.getRectangle().getY();
-//        player.x = 70 * 32;
-//        player.y = 82 * 32;
+//        player.x = 73 * 32;
+//        player.y = 81 * 32;
     }
     
     // checking winning condition
@@ -660,11 +782,11 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
 
                         switch (keycode) {
                             case Keys.UP:
-                                // scroll up the item objectItems
+                                // scroll up the item list
                                 itemList.setSelectedIndex(upIndex);
                                 break;
                             case Keys.DOWN:
-                                // scroll down the item objectItems
+                                // scroll down the item list
                                 itemList.setSelectedIndex(downIndex);
                                 break;
                             case Keys.F:
@@ -763,6 +885,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                     if (item.getItemID() == objectItems.get(0).getItemID()) {
                         haveIt = true;
                         neededKey = item;
+                        break;
                     }
                 }
 //                Gdx.app.log("haveIt: ", "" + haveIt);
@@ -775,7 +898,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
             }
             // second
             else if (indexForMessageTree == 1) {
-                dialogBoxLabel.setText(messageTree.get(2).get(1) + " " + neededKey.getItemName());
+                dialogBoxLabel.setText(messageTree.get(2).get(1) + " " + neededKey.getItemName() + ".");
             }
             // third
             else if (indexForMessageTree == 2) {
@@ -802,11 +925,11 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
 
                         switch (keycode) {
                             case Keys.UP:
-                                // scroll up the item objectItems
+                                // scroll up the option list
                                 itemList.setSelectedIndex(upIndex);
                                 break;
                             case Keys.DOWN:
-                                // scroll down the item objectItems
+                                // scroll down the option list
                                 itemList.setSelectedIndex(downIndex);
                                 break;
                             case Keys.F:
@@ -895,7 +1018,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
             }
             // second
             else if (indexForMessageTree == 1) {
-                dialogBoxLabel.setText(messageTree.get(3).get(1) + " " + neededKey.getItemName());
+                dialogBoxLabel.setText(messageTree.get(3).get(1) + " " + neededKey.getItemName() + ".");
             }
             // third
             else if (indexForMessageTree == 2) {
@@ -1035,6 +1158,383 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         // others
         else {
             dialogBoxLabel.setText(messageTree.get(4).get(indexForMessageTree));
+        }
+        
+        ++indexForMessageTree;
+    }
+    
+    // carry out password-unlock interaction (using password to unlock objects)
+    private void passUnlockInteraction() {
+        // for door object
+        if (objectItems.size == 1) {
+            // end of "conversation" -> reset
+            if (indexForMessageTree == messageTree.get(5).size) {
+                state = STATE.ONGOING;
+                interactHappen = false;
+                typeInteraction = TYPE_INTERACTION.NO_INTERACTION;
+                indexForMessageTree = 0;
+                
+                dialogBoxLabel.remove();
+                return;
+            }
+            
+            // first
+            if (indexForMessageTree == 0) {
+                // create conversation box
+                dialogBoxLabel = new Label(messageTree.get(5).get(0), skin, "custom");
+                dialogBoxLabel.setPosition(0, 0);
+                dialogBoxLabel.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/5);
+                dialogBoxLabel.setAlignment(Align.topLeft);
+                stage.addActor(dialogBoxLabel);
+                
+                // check if Player have required card to unlock (obtained from the uniform)
+                boolean haveIt = false;
+                for (Item item : player.getInventory()) {
+                    if (item.getItemID() == 3) {    // the required card in uniform - id = 3
+                        haveIt = true;
+                        break;
+                    }
+                }
+                
+                // if not
+                if (!haveIt) {
+                    indexForMessageTree = messageTree.get(5).size - 1;
+                }
+            }
+            // second
+            else if (indexForMessageTree == 1) {
+                dialogBoxLabel.setText(messageTree.get(5).get(1));
+                
+                // create a List contain Yes/No options
+                Array<String> options = new Array<String>();
+                options.add("Yes");
+                options.add("No");
+                itemList = new List(skin, "custom");
+                itemList.setItems(options);
+                itemList.setSelectedIndex(0);
+                itemList.setSize(Gdx.graphics.getWidth()/4, Gdx.graphics.getHeight()/3);
+                itemList.setPosition(Gdx.graphics.getWidth() - itemList.getWidth(), dialogBoxLabel.getHeight());
+                itemList.addListener(new InputListener() {
+                    @Override
+                    public boolean keyDown(InputEvent event, int keycode) {
+                        int currentIndex = itemList.getSelectedIndex();
+                        int upIndex = currentIndex - 1;
+                        int downIndex = currentIndex + 1;
+
+                        if (upIndex < 0) upIndex = itemList.getItems().size - 1;
+                        if (downIndex >= itemList.getItems().size) downIndex = 0;
+
+                        switch (keycode) {
+                            case Keys.UP:
+                                // scroll up the option list
+                                itemList.setSelectedIndex(upIndex);
+                                break;
+                            case Keys.DOWN:
+                                // scroll down the option list
+                                itemList.setSelectedIndex(downIndex);
+                                break;
+                            case Keys.F:
+                                // if Player chooses "No" -> end the dialog
+                                // otherwise; let it continue on
+                                if (itemList.getSelectedIndex() == 1) {
+                                    indexForMessageTree = messageTree.get(5).size;
+                                }
+
+                                // remove list of items from stage
+                                itemList.remove();
+
+                                resetInputProcessor();
+                                break;
+                            default:
+                                break;
+                        }
+
+                        return true;
+                    }
+                });
+                stage.addActor(itemList);
+                stage.setKeyboardFocus(itemList);
+
+                // set InputProcessor to stage
+                Gdx.input.setInputProcessor(stage);
+            }
+            // third
+            else if (indexForMessageTree == 2) {
+                dialogBoxLabel.setText(messageTree.get(5).get(2));
+                
+                // create a TextField for player to enter password
+                passField = new TextField("Full name", skin, "default");
+                passField.setHeight(25);
+                passField.setPosition(Gdx.graphics.getWidth()/2 - passField.getWidth()/2,
+                        Gdx.graphics.getHeight()/2 - passField.getHeight()/2);
+                stage.addActor(passField);
+                
+                // create button, goes with the textfield
+                txtButton = new TextButton("Enter", skin, "round");
+                txtButton.setHeight(passField.getHeight());
+                txtButton.setPosition(passField.getWidth() + passField.getX(), passField.getY());
+                txtButton.addListener(new ClickListener() {
+                    @Override
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        // if player enters correct name of any guards -> unlock the door
+                        // note: in this case, we only check for the name 'Henry Karvick'
+                        String enterName = passField.getText();
+                        if (enterName.equalsIgnoreCase(objectItems.first().getDescription())) {
+                            // unlock the door
+                            // set "locked" to false in object of DoorCollision
+                            MapObject object = doorObjects.get(latestObjectName);
+                            object.getProperties().put("locked", false);
+
+                            // set "locked" to false in object of ObjectInteration
+                            object = interactionObjects.get(latestObjectName);
+                            object.getProperties().put("locked", false);
+                            
+                            dialogBoxLabel.setText("Valid name.");
+                        }
+                        // enter wrong name
+                        else {
+                            dialogBoxLabel.setText("Invalid name.");
+
+                            // end the dialog
+                            indexForMessageTree = messageTree.get(5).size;
+                        }
+                        
+                        passField.remove();     // remove actors from stage
+                        txtButton.remove();
+                        
+                        resetInputProcessor();  // reset InputProcessor to MapControlRenderer
+                        
+                        return true;
+                    }
+                });
+                stage.addActor(txtButton);
+                
+                Gdx.input.setInputProcessor(stage);
+            }
+            // others
+            else {
+                dialogBoxLabel.setText(messageTree.get(5).get(indexForMessageTree));
+            }
+            
+            ++indexForMessageTree;
+        }
+        
+        // for safe locker object
+        else {
+            // end of "conversation" -> reset
+            if (indexForMessageTree == messageTree.get(6).size) {
+                state = STATE.ONGOING;
+                interactHappen = false;
+                typeInteraction = TYPE_INTERACTION.NO_INTERACTION;
+                indexForMessageTree = 0;
+                
+                dialogBoxLabel.remove();
+                return;
+            }
+            
+            // first
+            if (indexForMessageTree == 0) {
+                // create conversation box
+                dialogBoxLabel = new Label(messageTree.get(6).get(0), skin, "custom");
+                dialogBoxLabel.setPosition(0, 0);
+                dialogBoxLabel.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/5);
+                dialogBoxLabel.setAlignment(Align.topLeft);
+                stage.addActor(dialogBoxLabel);
+                
+                // create a TextField + TextButton -> prompt for password to unlock the safe locker
+                // textfield
+                passField = new TextField("", skin, "default");
+                passField.setHeight(25);
+                passField.setPosition(Gdx.graphics.getWidth()/2 - passField.getWidth()/2,
+                        Gdx.graphics.getHeight()/2 - passField.getHeight()/2);
+                stage.addActor(passField);
+                
+                // textbutton
+                txtButton = new TextButton("Enter", skin, "round");
+                txtButton.setHeight(passField.getHeight());
+                txtButton.setPosition(passField.getWidth() + passField.getX(), passField.getY());
+                txtButton.addListener(new ClickListener() {
+                    @Override
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        // if Player enters the correct password -> unlock the safe locker
+                        //      -> Player obtains all items in it
+                        // password: 3863 - get from object in the map
+                        String enterPass = passField.getText();
+                        if (enterPass.equalsIgnoreCase(objectItems.first().getDescription())) {
+                            // unlock the safe locker
+                            // set "locked" to false in object of ObjectInteraction
+                            MapObject object = interactionObjects.get(latestObjectName);
+                            object.getProperties().put("locked", false);
+                            
+                            dialogBoxLabel.setText("*Clicked*");
+                        }
+                        // enter wrong password
+                        else {
+                            dialogBoxLabel.setText("Wrong password!");
+
+                            // end the dialog
+                            indexForMessageTree = messageTree.get(6).size;
+                        }
+                        
+                        passField.remove();     // remove actors from stage
+                        txtButton.remove();
+                        
+                        resetInputProcessor();  // reset InputProcessor to MapControlRenderer
+                        
+                        return true;
+                    }
+                });
+                stage.addActor(txtButton);
+                
+                Gdx.input.setInputProcessor(stage);
+            }
+            // last - message when obtain items
+            else if (indexForMessageTree == messageTree.get(6).size - 1) {
+                dialogBoxLabel.setText(messageTree.get(6).get(indexForMessageTree) +
+                        objectItems.get(indexRemainingItems).getItemName());
+                
+                // add the corresponding item into Player's inventory
+                player.getInventory().add(objectItems.get(indexRemainingItems++));
+                
+                if (indexRemainingItems < objectItems.size) {
+                    --indexForMessageTree;
+                }
+            }
+            // others
+            else {
+                dialogBoxLabel.setText(messageTree.get(6).get(indexForMessageTree));
+            }
+            
+            ++indexForMessageTree;
+        }
+    }
+    
+    // carry out break interaction (crack the door open)
+    private void breakInteraction() {
+        // end of "conversation" -> reset
+        if (indexForMessageTree == messageTree.get(7).size) {
+            state = STATE.ONGOING;
+            interactHappen = false;
+            typeInteraction = TYPE_INTERACTION.NO_INTERACTION;
+            indexForMessageTree = 0;
+
+            dialogBoxLabel.remove();
+            return;
+        }
+        
+        // first
+        if (indexForMessageTree == 0) {
+            // create conversation box
+            dialogBoxLabel = new Label(messageTree.get(7).get(0), skin, "custom");
+            dialogBoxLabel.setPosition(0, 0);
+            dialogBoxLabel.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/5);
+            dialogBoxLabel.setAlignment(Align.topLeft);
+            stage.addActor(dialogBoxLabel);
+            
+            // check if Player has the required item to break the door
+            boolean haveIt = false;
+            for (Item item : player.getInventory()) {
+                if (item.getItemID() == objectItems.first().getItemID()) {
+                    haveIt = true;
+                    break;
+                }
+            }
+            
+            // if not -> end the dialog
+            if (!haveIt) {
+                indexForMessageTree = messageTree.get(7).size - 1;
+            }
+        }
+        // third
+        else if (indexForMessageTree == 2) {
+            dialogBoxLabel.setText(messageTree.get(7).get(2));
+
+            // create a List contain Yes/No options
+            Array<String> options = new Array<String>();
+            options.add("Yes");
+            options.add("No");
+            itemList = new List(skin, "custom");
+            itemList.setItems(options);
+            itemList.setSelectedIndex(0);
+            itemList.setSize(Gdx.graphics.getWidth()/4, Gdx.graphics.getHeight()/3);
+            itemList.setPosition(Gdx.graphics.getWidth() - itemList.getWidth(), dialogBoxLabel.getHeight());
+            itemList.addListener(new InputListener() {
+                @Override
+                public boolean keyDown(InputEvent event, int keycode) {
+                    int currentIndex = itemList.getSelectedIndex();
+                    int upIndex = currentIndex - 1;
+                    int downIndex = currentIndex + 1;
+
+                    if (upIndex < 0) upIndex = itemList.getItems().size - 1;
+                    if (downIndex >= itemList.getItems().size) downIndex = 0;
+
+                    switch (keycode) {
+                        case Keys.UP:
+                            // scroll up the option list
+                            itemList.setSelectedIndex(upIndex);
+                            break;
+                        case Keys.DOWN:
+                            // scroll down the option list
+                            itemList.setSelectedIndex(downIndex);
+                            break;
+                        case Keys.F:
+                            // if Player choose "Yes" -> crack the door open
+                            if (itemList.getSelectedIndex() == 0) {
+                                // remove the door
+                                // extract neccessary attributes
+                                MapObject object = doorObjects.get(latestObjectName);
+                                String layerName = object.getProperties().get("tileLayerName", "", String.class);
+                                TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(layerName);
+                                int x = object.getProperties().get("lowerLeftX", Integer.class);
+                                int y = object.getProperties().get("lowerLeftY", Integer.class);
+                                
+                                // extract the tiles of the door
+                                tile1 = layer.getCell(x, y).getTile();            // lower left
+                                tile2 = layer.getCell(x + 1, y).getTile();        // lower right
+                                tile3 = layer.getCell(x, y + 1).getTile();        // upper left
+                                tile4 = layer.getCell(x + 1, y + 1).getTile();    // upper right
+
+                                // "erase" the door
+                                layer.getCell(x, y).setTile(null);
+                                layer.getCell(x + 1, y).setTile(null);
+                                layer.getCell(x, y + 1).setTile(null);
+                                layer.getCell(x + 1, y + 1).setTile(null);
+
+                                
+                                // set "locked" to false in object of DoorCollision
+                                object = doorObjects.get(latestObjectName);
+                                object.getProperties().put("locked", false);
+                                
+                                // set "broken" to true in object of ObjectInteration
+                                object = interactionObjects.get(latestObjectName);
+                                object.getProperties().put("broken", true);
+                            }
+                            // if "No" -> end dialog "conversation"
+                            else {
+                                indexForMessageTree = messageTree.get(7).size;  // end the dialog
+                            }
+
+                            // remove list of items from stage
+                            itemList.remove();
+
+                            resetInputProcessor();
+                            break;
+                        default:
+                            break;
+                    }
+
+                    return true;
+                }
+            });
+            stage.addActor(itemList);
+            stage.setKeyboardFocus(itemList);
+
+            // set InputProcessor to stage
+            Gdx.input.setInputProcessor(stage);
+        }
+        // others
+        else {
+            dialogBoxLabel.setText(messageTree.get(7).get(indexForMessageTree));
         }
         
         ++indexForMessageTree;
@@ -1210,6 +1710,16 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                 // for read_interaction
                 else if (typeInteraction == TYPE_INTERACTION.READ_INTERACTION) {
                     readInteraction();
+                }
+                
+                // for pass_unlock_interaction
+                else if (typeInteraction == TYPE_INTERACTION.PASS_UNLOCK_INTERACTION) {
+                    passUnlockInteraction();
+                }
+                
+                // for break_interaction
+                else if (typeInteraction == TYPE_INTERACTION.BREAK_INTERACTION) {
+                    breakInteraction();
                 }
                 
                 break;

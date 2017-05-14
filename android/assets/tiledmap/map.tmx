@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="264">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="267">
  <tileset firstgid="1" name="materials" tilewidth="32" tileheight="32" tilecount="4096" columns="64">
   <image source="../tilesheets/materials.jpg" width="2048" height="2048"/>
  </tileset>
@@ -1150,7 +1150,7 @@
     <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="164" name="bin3" x="1536" y="1728" width="61.5" height="57">
+  <object id="164" name="bin3" x="1536" y="1728" width="61.5" height="28">
    <properties>
     <property name="blocked" type="bool" value="true"/>
    </properties>
@@ -1330,7 +1330,7 @@
     <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="202" name="safebox" x="2400" y="434.333" width="32" height="45">
+  <object id="202" name="safeLocker" x="2400" y="434.333" width="32" height="45">
    <properties>
     <property name="blocked" type="bool" value="true"/>
    </properties>
@@ -1464,7 +1464,7 @@
   </object>
   <object id="245" name="officeDoor2" x="2142" y="608" width="2.5" height="64">
    <properties>
-    <property name="locked" type="bool" value="false"/>
+    <property name="locked" type="bool" value="true"/>
     <property name="lowerLeftX" type="int" value="66"/>
     <property name="lowerLeftY" type="int" value="79"/>
     <property name="tileLayerName" value="RearObjects"/>
@@ -1507,7 +1507,7 @@
     <property name="type" value="search_interaction"/>
    </properties>
   </object>
-  <object id="206" name="garbageBin3" x="1536" y="1785" width="61" height="16">
+  <object id="206" name="garbageBin3" x="1536" y="1756" width="61" height="16">
    <properties>
     <property name="contactDirection" value="up"/>
     <property name="haveItems" type="bool" value="false"/>
@@ -1549,6 +1549,57 @@
     <property name="contactDirection" value="left"/>
     <property name="haveItems" type="bool" value="true"/>
     <property name="listItemID" type="int" value="3"/>
+    <property name="type" value="search_interaction"/>
+   </properties>
+  </object>
+  <object id="256" name="drainingHoles4" x="984" y="1496" width="16" height="16">
+   <properties>
+    <property name="contactDirection" value="all"/>
+    <property name="haveItems" type="bool" value="true"/>
+    <property name="listItemID" type="int" value="5"/>
+    <property name="type" value="search_interaction"/>
+   </properties>
+  </object>
+  <object id="257" name="drainingHoles1" x="599.6" y="1496" width="16" height="16">
+   <properties>
+    <property name="contactDirection" value="all"/>
+    <property name="haveItems" type="bool" value="false"/>
+    <property name="type" value="search_interaction"/>
+   </properties>
+  </object>
+  <object id="258" name="drainingHoles2" x="600" y="1112" width="16" height="16">
+   <properties>
+    <property name="contactDirection" value="all"/>
+    <property name="haveItems" type="bool" value="false"/>
+    <property name="type" value="search_interaction"/>
+   </properties>
+  </object>
+  <object id="259" name="drainingHoles3" x="984" y="1112" width="16" height="16">
+   <properties>
+    <property name="contactDirection" value="all"/>
+    <property name="haveItems" type="bool" value="false"/>
+    <property name="type" value="search_interaction"/>
+   </properties>
+  </object>
+  <object id="260" name="drainingHoles5" x="1368" y="1112" width="16" height="16">
+   <properties>
+    <property name="contactDirection" value="all"/>
+    <property name="haveItems" type="bool" value="false"/>
+    <property name="type" value="search_interaction"/>
+   </properties>
+  </object>
+  <object id="261" name="drainingHoles6" x="1368" y="1496" width="16" height="16">
+   <properties>
+    <property name="contactDirection" value="all"/>
+    <property name="haveItems" type="bool" value="false"/>
+    <property name="type" value="search_interaction"/>
+   </properties>
+  </object>
+  <object id="253" name="racks" x="409.075" y="2616.44" width="15.1331" height="8">
+   <properties>
+    <property name="contactDirection" value="up"/>
+    <property name="haveItems" type="bool" value="true"/>
+    <property name="listItemID" type="int" value="4"/>
     <property name="type" value="search_interaction"/>
    </properties>
   </object>
@@ -1643,7 +1694,7 @@
   <object id="247" name="finalDoor" x="1995.66" y="361.05" width="40.7226" height="14.6184">
    <properties>
     <property name="contactDirection" value="up"/>
-    <property name="keyID" type="int" value="-1"/>
+    <property name="keyID" type="int" value="10"/>
     <property name="locked" type="bool" value="true"/>
     <property name="type" value="open_lock_interaction"/>
    </properties>
@@ -1651,7 +1702,7 @@
   <object id="248" name="computer" x="1589.17" y="2408.67" width="11.3333" height="3.33333">
    <properties>
     <property name="contactDirection" value="up"/>
-    <property name="message" value="01101011 01101001 01110100 01100011 01101000 01100101 01101110 00100000 01100011 01101111 01110010 01101110 01100101 01110010 "/>
+    <property name="message" value="01101011 01101001 01110100 01100011 01101000 01100101 01101110 00100000 01100011 01101111 01110010 01101110 01100101 01110010"/>
     <property name="name" value="computer"/>
     <property name="type" value="read_interaction"/>
    </properties>
@@ -1688,55 +1739,29 @@
     <property name="type" value="read_interaction"/>
    </properties>
   </object>
-  <object id="253" name="racks" x="409.075" y="2616.44" width="15.1331" height="8">
+  <object id="264" name="officeDoor1" x="1946.5" y="632" width="5.5" height="16.5">
    <properties>
-    <property name="contactDirection" value="up"/>
-    <property name="haveItems" type="bool" value="true"/>
-    <property name="listItemID" type="int" value="4"/>
-    <property name="type" value="search_interaction"/>
+    <property name="contactDirection" value="right"/>
+    <property name="locked" type="bool" value="true"/>
+    <property name="pass" value="Henry Karvick"/>
+    <property name="type" value="pass_unlock_interaction"/>
    </properties>
   </object>
-  <object id="256" name="drainingHoles4" x="984" y="1496" width="16" height="16">
+  <object id="265" name="safeLocker" x="2390.67" y="468" width="8.83333" height="16.5">
    <properties>
-    <property name="contactDirection" value="all"/>
-    <property name="haveItems" type="bool" value="true"/>
-    <property name="listItemID" type="int" value="5"/>
-    <property name="type" value="search_interaction"/>
+    <property name="contactDirection" value="right"/>
+    <property name="listItemID" type="int" value="6"/>
+    <property name="locked" type="bool" value="true"/>
+    <property name="pass" value="3863"/>
+    <property name="type" value="pass_unlock_interaction"/>
    </properties>
   </object>
-  <object id="257" name="drainingHoles1" x="599.6" y="1496" width="16" height="16">
+  <object id="266" name="officeDoor2" x="2137" y="636.333" width="5" height="9">
    <properties>
-    <property name="contactDirection" value="all"/>
-    <property name="haveItems" type="bool" value="false"/>
-    <property name="type" value="search_interaction"/>
-   </properties>
-  </object>
-  <object id="258" name="drainingHoles2" x="600" y="1112" width="16" height="16">
-   <properties>
-    <property name="contactDirection" value="all"/>
-    <property name="haveItems" type="bool" value="false"/>
-    <property name="type" value="search_interaction"/>
-   </properties>
-  </object>
-  <object id="259" name="drainingHoles3" x="984" y="1112" width="16" height="16">
-   <properties>
-    <property name="contactDirection" value="all"/>
-    <property name="haveItems" type="bool" value="false"/>
-    <property name="type" value="search_interaction"/>
-   </properties>
-  </object>
-  <object id="260" name="drainingHoles5" x="1368" y="1112" width="16" height="16">
-   <properties>
-    <property name="contactDirection" value="all"/>
-    <property name="haveItems" type="bool" value="false"/>
-    <property name="type" value="search_interaction"/>
-   </properties>
-  </object>
-  <object id="261" name="drainingHoles6" x="1368" y="1496" width="16" height="16">
-   <properties>
-    <property name="contactDirection" value="all"/>
-    <property name="haveItems" type="bool" value="false"/>
-    <property name="type" value="search_interaction"/>
+    <property name="breakItemID" type="int" value="8"/>
+    <property name="broken" type="bool" value="false"/>
+    <property name="contactDirection" value="right"/>
+    <property name="type" value="break_interaction"/>
    </properties>
   </object>
  </objectgroup>
