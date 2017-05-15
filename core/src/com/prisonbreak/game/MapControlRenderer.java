@@ -1394,7 +1394,8 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                         objectItems.get(indexRemainingItems).getItemName());
                 
                 // add the corresponding item into Player's inventory
-                player.getInventory().add(objectItems.get(indexRemainingItems++));
+//                player.getInventory().add(objectItems.get(indexRemainingItems++));
+                player.addItem(objectItems.get(indexRemainingItems++));
                 
                 if (indexRemainingItems < objectItems.size) {
                     --indexForMessageTree;
