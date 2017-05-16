@@ -21,10 +21,10 @@ import com.prisonbreak.game.MapControlRenderer;
  */
 public abstract class Character {
     
-    protected static final int FRAME_COLS = 4;
+    protected static final int FRAME_COLS = 5;
     protected static final int FRAME_ROWS = 1;
     
-    protected TextureRegion[] playerFrames;   // 0: down/right , 1: up, 2: left, 3: sleep
+    protected TextureRegion[] characterFrames;   // 0: down , 1: up, 2: left, 3: right, 4: sleep
     protected TextureRegion currentTexture;
     protected Texture sheet;                // contain spritesheet for player
     protected Sprite sprite;
@@ -43,16 +43,7 @@ public abstract class Character {
     public int height;
     public final float velocity = 32.0f * 6;
     
-    public Character() {
-        // initialize direction flags
-        moveLeft = moveRight = moveUp = moveDown = false;
-        
-        // set current direction to "none"
-        currentDirection = "none";
-    }
-    
-    // initialize different images for Character
-    public void initializeImages(String tileSheetName) {
+    public Character(String tileSheetName) {
         // load sheet image
         sheet = new Texture(Gdx.files.internal(tileSheetName));
         
@@ -66,21 +57,27 @@ public abstract class Character {
         TextureRegion[][] tmp = TextureRegion.split(sheet, width, height);
         
         // place all images into a 1D array
-        playerFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
+        characterFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
         int index = 0;
         for (int i = 0; i < FRAME_ROWS; ++i) {
             for (int j = 0; j < FRAME_COLS; ++j) {
-                playerFrames[index++] = tmp[i][j];
+                characterFrames[index++] = tmp[i][j];
             }
         }
         
         // initialize the current image
-        currentTexture = playerFrames[0];
+        currentTexture = characterFrames[0];
         
         // sprite
         sprite = new Sprite(currentTexture);
         sprite.setX(x);
         sprite.setY(y);
+        
+        // initialize direction flags
+        moveLeft = moveRight = moveUp = moveDown = false;
+        
+        // set current direction to "none"
+        currentDirection = "none";
     }
     
     public Sprite getSprite() {
@@ -97,6 +94,19 @@ public abstract class Character {
     
     public void dispose() {
        sheet.dispose();
+    }
+    
+    // set texture based on current direction
+    public void setTexture() {
+        if (currentDirection.equalsIgnoreCase("down") || currentDirection.equalsIgnoreCase("none")) {
+            currentTexture = characterFrames[0];
+        } else if (currentDirection.equalsIgnoreCase("up")) {
+            currentTexture = characterFrames[1];
+        } else if (currentDirection.equalsIgnoreCase("left")) {
+            currentTexture = characterFrames[2];
+        } else {
+            currentTexture = characterFrames[3];
+        }
     }
     
     public void setLeftMove(boolean t) {
@@ -141,10 +151,10 @@ public abstract class Character {
             if (moveDown) moveDown = false;
 
             sleep = true;
-            currentTexture = playerFrames[3];
+            currentTexture = characterFrames[4];
         } else {
             sleep = false;
-            currentTexture = playerFrames[0];
+            currentTexture = characterFrames[0];
         }
         
         currentDirection = "none";
@@ -250,8 +260,9 @@ public abstract class Character {
  
         // move player along setting direction
         if (moveLeft) {
-            currentTexture = playerFrames[2];
+//            currentTexture = characterFrames[2];
             currentDirection = "left";
+            setTexture();
             x -= amountX;
             
             if (haveCollision(x, y)) {
@@ -260,8 +271,9 @@ public abstract class Character {
             }
         }
         if (moveRight) {
-            currentTexture = playerFrames[0];
+//            currentTexture = characterFrames[3];
             currentDirection = "right";
+            setTexture();
             x += amountX;
             
             if (haveCollision(x, y)) {
@@ -270,8 +282,9 @@ public abstract class Character {
             }
         }
         if (moveUp) {
-            currentTexture = playerFrames[1];
+//            currentTexture = characterFrames[1];
             currentDirection = "up";
+            setTexture();
             y += amountY;
             
             if (haveCollision(x, y)) {
@@ -280,8 +293,9 @@ public abstract class Character {
             }
         }
         if (moveDown) {
-            currentTexture = playerFrames[0];
+//            currentTexture = characterFrames[0];
             currentDirection = "down";
+            setTexture();
             y -= amountY;
             
             if (haveCollision(x, y)) {
@@ -299,6 +313,7 @@ public abstract class Character {
 //        Gdx.app.log("Player:", x + " " + y + " " + (x + width) + " " + (y + height));
     }
     
+    // update position + corresponding image for the Character
     public abstract void update();
     
 }

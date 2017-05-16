@@ -17,9 +17,7 @@ public class Player extends Character {
     private Array<Item> inventory;
     
     public Player() {
-        super();
-        
-        initializeImages("prisoner.png");
+        super("prisoner.png");
         
         // initialize Player's inventory
         inventory = new Array<Item>();
