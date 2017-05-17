@@ -57,7 +57,7 @@ public class GameScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         
         // create label for displaying message, initialize to winning message
-        label = new Label("CONGRATULATIONS\nYOU HAVE ESCAPED THE PRISON\nPRESS ESC TO RETURN TO MAIN MENU",
+        label = new Label("CONGRATULATIONS\nYOU HAVE ESCAPED THE PRISON\nPress ESC to return to the Main Menu",
                 skin, "title-plain");
         label.setColor(Color.RED);
         label.setPosition(0, 0);

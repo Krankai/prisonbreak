@@ -60,6 +60,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     private final OrthographicCamera camera;
     private final ShapeRenderer shapeRenderer;
     private final int drawSpritesAfterLayer = this.map.getLayers().getIndex("Walls") + 1;
+    private final int drawDetectionAreaAfterLayer = this.map.getLayers().getIndex("Tiles") + 1;
     private Array<Array<Item>> listItems;       // array holds the overall list of list items of all objects
     private Array<Array<String>> messageTree;   // array holds the message tree (for all objects)
     private Array<Item> objectItems;            // current list of items for one object
@@ -1707,10 +1708,17 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                     
                     // layer to draw characters and guards
                     if (currentLayer == drawSpritesAfterLayer) {
+                        // draw player
+                        player.getSprite().draw(this.getBatch());
+                        
                         // draw all the guards
                         for (Guard guard : guards) {
                             guard.getSprite().draw(this.getBatch());
-                            
+                        }
+                    }
+                    // layer to draw guard's detection area
+                    if (currentLayer == drawDetectionAreaAfterLayer) {
+                        for (Guard guard : guards) {
                             endRender();
                             
                             // draw detection area
@@ -1727,9 +1735,6 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                             
                             beginRender();
                         }
-                        
-                        // draw player
-                        player.getSprite().draw(this.getBatch());
                     }
                 } 
                 // object layer

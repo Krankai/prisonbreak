@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="268">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="281">
  <tileset firstgid="1" name="materials" tilewidth="32" tileheight="32" tilecount="4096" columns="64">
   <image source="../tilesheets/materials.jpg" width="2048" height="2048"/>
  </tileset>
@@ -1155,7 +1155,7 @@
     <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="165" name="wardrobe9" x="451.5" y="2560" width="124.5" height="58.5">
+  <object id="165" name="wardrobe9" x="451.5" y="2560" width="124.5" height="55.8333">
    <properties>
     <property name="blocked" type="bool" value="true"/>
    </properties>
@@ -1165,7 +1165,7 @@
     <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="167" name="table9" x="515" y="2692" width="61" height="124">
+  <object id="167" name="table9" x="515" y="2693.33" width="61" height="122.667">
    <properties>
     <property name="blocked" type="bool" value="true"/>
    </properties>
@@ -1514,7 +1514,7 @@
     <property name="type" value="search_interaction"/>
    </properties>
   </object>
-  <object id="207" name="wardrobe1" x="473.075" y="2619.44" width="13.1331" height="16">
+  <object id="207" name="wardrobe1" x="473.075" y="2616.44" width="13.1331" height="16">
    <properties>
     <property name="contactDirection" value="up"/>
     <property name="haveItems" type="bool" value="true"/>
@@ -1522,7 +1522,7 @@
     <property name="type" value="search_interaction"/>
    </properties>
   </object>
-  <object id="208" name="wardrobe2" x="537.374" y="2619.44" width="12.4167" height="16">
+  <object id="208" name="wardrobe2" x="537.374" y="2616.44" width="12.4167" height="16">
    <properties>
     <property name="contactDirection" value="up"/>
     <property name="haveItems" type="bool" value="false"/>
@@ -1770,6 +1770,97 @@
    <properties>
     <property name="direction" value="up"/>
     <property name="sheetName" value="guard1.png"/>
+    <property name="type" value="stationary"/>
+   </properties>
+  </object>
+  <object id="268" name="guard2" x="1536" y="1920" width="64" height="64">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="sheetName" value="guard2.png"/>
+    <property name="type" value="stationary"/>
+   </properties>
+  </object>
+  <object id="269" name="guard3" x="2112" y="1717" width="64" height="64">
+   <properties>
+    <property name="direction" value="right"/>
+    <property name="sheetName" value="guard3.png"/>
+    <property name="type" value="stationary"/>
+   </properties>
+  </object>
+  <object id="270" name="guard4" x="2240" y="1952" width="64" height="64">
+   <properties>
+    <property name="direction" value="left"/>
+    <property name="sheetName" value="guard4.png"/>
+    <property name="type" value="stationary"/>
+   </properties>
+  </object>
+  <object id="271" name="guard5" x="2112" y="2368" width="64" height="64">
+   <properties>
+    <property name="direction" value="right"/>
+    <property name="sheetName" value="guard1.png"/>
+    <property name="type" value="stationary"/>
+   </properties>
+  </object>
+  <object id="272" name="guard6" x="1216" y="1088" width="64" height="64">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="sheetName" value="guard2.png"/>
+    <property name="type" value="stationary"/>
+   </properties>
+  </object>
+  <object id="273" name="guard7" x="1088" y="1472" width="64" height="64">
+   <properties>
+    <property name="direction" value="up"/>
+    <property name="sheetName" value="guard3.png"/>
+    <property name="type" value="stationary"/>
+   </properties>
+  </object>
+  <object id="274" name="guard8" x="832" y="1088" width="64" height="64">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="sheetName" value="guard4.png"/>
+    <property name="type" value="stationary"/>
+   </properties>
+  </object>
+  <object id="275" name="guard9" x="704" y="1472" width="64" height="64">
+   <properties>
+    <property name="direction" value="up"/>
+    <property name="sheetName" value="guard1.png"/>
+    <property name="type" value="stationary"/>
+   </properties>
+  </object>
+  <object id="276" name="guard10" x="2048" y="960" width="64" height="64">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="sheetName" value="guard2.png"/>
+    <property name="type" value="stationary"/>
+   </properties>
+  </object>
+  <object id="277" name="guard11" x="1024" y="608" width="64" height="64">
+   <properties>
+    <property name="direction" value="right"/>
+    <property name="sheetName" value="guard3.png"/>
+    <property name="type" value="stationary"/>
+   </properties>
+  </object>
+  <object id="278" name="guard12" x="832" y="480" width="64" height="64">
+   <properties>
+    <property name="direction" value="left"/>
+    <property name="sheetName" value="guard4.png"/>
+    <property name="type" value="stationary"/>
+   </properties>
+  </object>
+  <object id="279" name="guard13" x="1376" y="832" width="64" height="64">
+   <properties>
+    <property name="direction" value="up"/>
+    <property name="sheetName" value="guard1.png"/>
+    <property name="type" value="stationary"/>
+   </properties>
+  </object>
+  <object id="280" name="guard13" x="512" y="800" width="64" height="64">
+   <properties>
+    <property name="direction" value="right"/>
+    <property name="sheetName" value="guard2.png"/>
     <property name="type" value="stationary"/>
    </properties>
   </object>
