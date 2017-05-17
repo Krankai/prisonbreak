@@ -19,6 +19,20 @@ public class Player extends Character {
     public Player() {
         super("prisoner.png");
         
+        // initialize the current image
+        currentTexture = characterFrames[0];
+        
+        // sprite
+        sprite = new Sprite(currentTexture);
+        sprite.setX(x);
+        sprite.setY(y);
+        
+        // initialize direction flags
+        moveLeft = moveRight = moveUp = moveDown = false;
+        
+        // set current direction to "none"
+        currentDirection = "none";
+        
         // initialize Player's inventory
         inventory = new Array<Item>();
     }

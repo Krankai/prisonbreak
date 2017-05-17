@@ -17,7 +17,7 @@ import com.prisonbreak.game.MapControlRenderer;
 
 /**
  *
- * @author user
+ * @author krankai
  */
 public abstract class Character {
     
@@ -64,20 +64,6 @@ public abstract class Character {
                 characterFrames[index++] = tmp[i][j];
             }
         }
-        
-        // initialize the current image
-        currentTexture = characterFrames[0];
-        
-        // sprite
-        sprite = new Sprite(currentTexture);
-        sprite.setX(x);
-        sprite.setY(y);
-        
-        // initialize direction flags
-        moveLeft = moveRight = moveUp = moveDown = false;
-        
-        // set current direction to "none"
-        currentDirection = "none";
     }
     
     public Sprite getSprite() {
@@ -161,6 +147,7 @@ public abstract class Character {
     }
     
     // check various kinds of collision
+    //      collision with other 'Character's (Player/Guard)
     //      collision with static (blocked) objects in the map
     //      collision with locked doors in the map
     //      collision with walls in the map
@@ -172,8 +159,47 @@ public abstract class Character {
             return true;
         }
         
-        // get bounding rectangle of Player
-        Rectangle playerBounding = new Rectangle(newX, newY, width, height);
+        // get bounding rectangle of current Character
+        Rectangle characterBounding = new Rectangle(newX, newY, width, height);
+        
+        /* With other Characters */
+        
+        // if current character == Player
+        float offset = 4f;
+        if (this instanceof Player) {
+            Rectangle rectPlayer = new Rectangle(characterBounding.getX() + offset,
+                    characterBounding.getY() + offset,
+                    characterBounding.getWidth()-2*offset,
+                    characterBounding.getHeight()-2*offset);
+            
+            // check with Guards
+            for (Guard guard : renderer.getListGuards()) {
+                Rectangle rectGuard = new Rectangle(guard.getSprite().getBoundingRectangle().getX() + offset,
+                    guard.getSprite().getBoundingRectangle().getY() + offset,
+                    guard.getSprite().getBoundingRectangle().getWidth()-2*offset,
+                    guard.getSprite().getBoundingRectangle().getHeight()-2*offset);
+                
+                if (rectPlayer.overlaps(rectGuard))
+                    return true;
+            }
+        }
+        // if current character == Guard
+        else {
+            Rectangle rectGuard = new Rectangle(characterBounding.getX() + offset,
+                    characterBounding.getY() + offset,
+                    characterBounding.getWidth()-2*offset,
+                    characterBounding.getHeight()-2*offset);
+            Rectangle rectPlayer = new Rectangle(renderer.getPlayer().getSprite().getBoundingRectangle().getX() + offset,
+                    renderer.getPlayer().getSprite().getBoundingRectangle().getY() + offset,
+                    renderer.getPlayer().getSprite().getBoundingRectangle().getWidth()-2*offset,
+                    renderer.getPlayer().getSprite().getBoundingRectangle().getHeight()-2*offset);
+            
+            // check with Player
+            if (renderer.getPlayer().getSprite().getBoundingRectangle().overlaps(characterBounding))
+                return true;
+        }
+        
+        /* End */
         
         /* With static (blocked) objects */
         
@@ -185,7 +211,7 @@ public abstract class Character {
                 RectangleMapObject rectObject = (RectangleMapObject) object;
                 
                 // check for overlapping ~ collision
-                if (rectObject.getRectangle().overlaps(playerBounding)) return true;
+                if (rectObject.getRectangle().overlaps(characterBounding)) return true;
             }
         }
         
@@ -200,7 +226,7 @@ public abstract class Character {
                     && object instanceof RectangleMapObject) {
                 RectangleMapObject rectObject = (RectangleMapObject) object;
                 
-                if (rectObject.getRectangle().overlaps(playerBounding)) return true;
+                if (rectObject.getRectangle().overlaps(characterBounding)) return true;
             }
         }
         

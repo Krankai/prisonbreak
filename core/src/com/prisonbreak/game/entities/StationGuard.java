@@ -5,20 +5,34 @@
  */
 package com.prisonbreak.game.entities;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
 /**
  *
  * @author krankai
  */
 public class StationGuard extends Guard {
     
-    public StationGuard(String tileSheetName, int id, String direction) {
-        super(tileSheetName, id);
+    public StationGuard(String tileSheetName, String direction, float x, float y) {
+        super(tileSheetName);
+        
+        // set direction flags
+        moveLeft = moveRight = moveUp = moveDown = false;
         
         // set (fixed) direction
         currentDirection = direction;
         
         // set (fixed) texture; based on current direction
         setTexture();
+        
+        // set position
+        this.x = x;
+        this.y = y;
+        
+        // set (fixed) sprite
+        sprite = new Sprite(currentTexture);
+        sprite.setX(this.x);
+        sprite.setY(this.y);
     }
     
     @Override

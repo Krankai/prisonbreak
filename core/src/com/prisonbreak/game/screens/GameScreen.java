@@ -38,9 +38,9 @@ public class GameScreen implements Screen {
     private final MapControlRenderer mapRenderer;
     private final Skin skin;
     private final Stage stage;
-    private Label label;
-    private Group labelContainer;
-    private ScheduledExecutorService executorService; 
+    private final Label label;
+    private final Group labelContainer;
+    private final ScheduledExecutorService executorService; 
     
     public GameScreen(Game aGame) {
         game = aGame;
@@ -92,12 +92,11 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
         mapRenderer.render();
         
-        // check winning condition
+        // check winning state
         if (mapRenderer.getCurrentState() == MapControlRenderer.STATE.WIN) {
 //            Gdx.app.log("Player ", "wins");
 //            Gdx.app.log("Curernt state: ", mapRenderer.getCurrentState().toString());
@@ -113,6 +112,23 @@ public class GameScreen implements Screen {
                 }
             }, 4, TimeUnit.SECONDS);
             
+        }
+        // check losing state
+        else if (mapRenderer.getCurrentState() == MapControlRenderer.STATE.LOSE) {
+            // set the appropriate message to display
+            label.setText("GAME OVER. YOU LOSE\nPress ESC to return to the Main Menu");
+            
+            // display
+            stage.act();
+            stage.draw();
+            
+            // wait for 4 seconds, then set state of the game to END
+            executorService.schedule(new Runnable() {
+                @Override
+                public void run() {
+                    mapRenderer.setCurrentState(MapControlRenderer.STATE.END);
+                }
+            }, 4, TimeUnit.SECONDS);
         }
         
         // if game is paused (due to winning/losing the game) -> still, display message

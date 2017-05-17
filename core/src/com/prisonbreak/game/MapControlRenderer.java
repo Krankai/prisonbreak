@@ -9,7 +9,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
@@ -31,8 +33,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.prisonbreak.game.entities.Guard;
 import com.prisonbreak.game.entities.Item;
 import com.prisonbreak.game.entities.Player;
+import com.prisonbreak.game.entities.StationGuard;
 
 /**
  *
@@ -54,11 +58,13 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     
     private final Player player;
     private final OrthographicCamera camera;
+    private final ShapeRenderer shapeRenderer;
     private final int drawSpritesAfterLayer = this.map.getLayers().getIndex("Walls") + 1;
     private Array<Array<Item>> listItems;       // array holds the overall list of list items of all objects
     private Array<Array<String>> messageTree;   // array holds the message tree (for all objects)
     private Array<Item> objectItems;            // current list of items for one object
     private Item neededKey;                     // the required key to unlock an object (door)
+    private Array<Guard> guards;
     
     private int indexForMessageTree = 0;
     private int indexRemainingItems = 1;        // for safe locker (pass_unlock_interaction)
@@ -126,10 +132,16 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         
         // initialize tiles
 //        tiles = new Array<TiledMapTile>();
+
+        // initialize list of guards in the map
+        initializeGuards();
         
         // create camera
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.translate(player.x, player.y);
+        
+        // create shape renderer
+        shapeRenderer = new ShapeRenderer();
     }
     
     public STATE getCurrentState() {
@@ -142,6 +154,10 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     
     public Player getPlayer() {
         return player;
+    }
+    
+    public Array<Guard> getListGuards() {
+        return guards;
     }
     
     public OrthographicCamera getCamera() {
@@ -320,6 +336,44 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         messages.add("Will you break the door?");
         messages.add("The door has been cracked open.");
         messageTree.add(messages);
+    }
+    
+    // initialize list of guards
+    private void initializeGuards() {
+        String type, sheetName, direction;
+        guards = new Array<Guard>();
+        
+        // extract all guard objects in map
+        MapObjects guardObjects = map.getLayers().get("Guards").getObjects();
+        
+        // for each object
+        for (MapObject guard : guardObjects) {
+            RectangleMapObject rectGuard = (RectangleMapObject) guard;
+            
+            // extract values of attributes of 'guard' object
+            type = rectGuard.getProperties().get("type", "none", String.class);
+            sheetName = rectGuard.getProperties().get("sheetName", "", String.class);
+            direction = rectGuard.getProperties().get("direction", "none", String.class);
+            if (type.equalsIgnoreCase("none")) {
+                Gdx.app.log("Error: ", "'type' attribute not found");
+                return;
+            } else if (direction.equalsIgnoreCase("none")) {
+                Gdx.app.log("Error: ", "invalid value for direction attribute");
+                return;
+            }
+            
+            // if stationary guard
+            if (type.equalsIgnoreCase("stationary")) {
+                // create the specified guard
+                Guard specifiedGuard = new StationGuard(sheetName, direction,
+                        rectGuard.getRectangle().getX(), rectGuard.getRectangle().getY());
+                specifiedGuard.setMapControlRenderer(this);
+                
+                // add the corresponding guard to the array
+                guards.add(specifiedGuard);
+                
+            }
+        }
     }
     
     // trigger the interaction with the next-to object (if possible)
@@ -571,12 +625,39 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
 //        player.y = 81 * 32;
     }
     
-    // checking winning condition
+    // check winning condition
     private boolean winGame() {
         RectangleMapObject rectLoc = (RectangleMapObject) winningLocation;
         
         return state != STATE.END && 
                 rectLoc.getRectangle().contains(player.getSprite().getBoundingRectangle());
+    }
+    
+    // perform actions in case PLayer loses the game
+    private void loseGame() {
+        // set state to PAUSE
+        state = STATE.PAUSE;
+        
+        // notify Player
+        dialogBoxLabel = new Label("Ouch!!! You have been found.", skin, "custom");
+        dialogBoxLabel.setPosition(0, 0);
+        dialogBoxLabel.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/5);
+        dialogBoxLabel.setAlignment(Align.topLeft);
+        dialogBoxLabel.addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Keys.F) {
+                    state = STATE.LOSE;
+                    dialogBoxLabel.remove();
+                    resetInputProcessor();
+                }
+                return true;
+            }
+        });
+        stage.addActor(dialogBoxLabel);
+        stage.setKeyboardFocus(dialogBoxLabel);
+        
+        Gdx.input.setInputProcessor(stage);
     }
     
     // reset the InputProcessor to this (MapControlRenderer) (from stage)
@@ -1543,7 +1624,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     
     @Override
     public void render() {
-        if (state != STATE.END && state != STATE.PAUSE) {
+        if (state == STATE.ONGOING) {
             player.update();
             moveCamera();
             
@@ -1599,9 +1680,20 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                 }
             }
             
+            // check if Player is detected by the Guards
+            for (Guard guard : guards) {
+                if (guard.detectPlayer()) {
+//                    Gdx.app.log("Game over", "");
+                    loseGame();
+                    break;
+                }
+            }
+            
             // update winning state
             if (winGame()) state = STATE.WIN;
         }
+        
+        shapeRenderer.setProjectionMatrix(camera.combined);
         
         beginRender();
         
@@ -1613,8 +1705,29 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                     renderTileLayer((TiledMapTileLayer) layer);
                     ++currentLayer;
                     
-                    // layer to draw characters
+                    // layer to draw characters and guards
                     if (currentLayer == drawSpritesAfterLayer) {
+                        // draw all the guards
+                        for (Guard guard : guards) {
+                            guard.getSprite().draw(this.getBatch());
+                            
+                            endRender();
+                            
+                            // draw detection area
+                            Gdx.gl.glEnable(GL20.GL_BLEND);
+                            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+                            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                            shapeRenderer.setColor(1, 0, 0, 0.5f);
+                            shapeRenderer.rect(guard.getDetectArea().getX(),
+                                    guard.getDetectArea().y,
+                                    guard.getDetectArea().getWidth(),
+                                    guard.getDetectArea().getHeight());
+                            shapeRenderer.end();
+                            Gdx.gl.glDisable(GL20.GL_BLEND);
+                            
+                            beginRender();
+                        }
+                        
                         // draw player
                         player.getSprite().draw(this.getBatch());
                     }
