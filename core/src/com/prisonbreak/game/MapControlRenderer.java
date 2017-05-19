@@ -351,6 +351,11 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         for (MapObject guard : guardObjects) {
             RectangleMapObject rectGuard = (RectangleMapObject) guard;
             
+            // if current guard is "not visible" -> ignore
+            if (!rectGuard.isVisible()) {
+                continue;
+            }
+            
             // extract values of attributes of 'guard' object
             type = rectGuard.getProperties().get("type", "none", String.class);
             sheetName = rectGuard.getProperties().get("sheetName", "", String.class);

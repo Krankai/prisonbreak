@@ -5,7 +5,9 @@
  */
 package com.prisonbreak.game.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 /**
  *
@@ -28,20 +30,97 @@ public abstract class Guard extends Character {
     
     // return the current detection area, based on the direction the Guard is facing
     public Rectangle getDetectArea() {
+        Rectangle oriDetectArea;
         float offset = 0;
         int scale = 4;
         
+        // get the original detection area of the guard
         if ("up".equals(currentDirection)) {
-            return (new Rectangle(x - offset, y + height, width + 2*offset, height * scale + offset));
+            oriDetectArea = new Rectangle(x - offset, y + height, width + 2*offset, height * scale + offset);
         } else if ("down".equals(currentDirection)) {
-            return (new Rectangle(x, y - height * scale, width, height * scale));
+            oriDetectArea = new Rectangle(x, y - height * scale, width, height * scale);
         } else if ("left".equals(currentDirection)) {
-            return (new Rectangle(x - width * scale, y, width * scale, height));
+            oriDetectArea = new Rectangle(x - width * scale, y, width * scale, height);
         } else if ("right".equals(currentDirection)) {
-            return (new Rectangle(x + width, y, width * scale, height));
+            oriDetectArea = new Rectangle(x + width, y, width * scale, height);
         } else {
             // default: "none" direction -> return null
             return null;
+        }
+        
+        // clip the detection area with all the "walls" in the map
+        
+        // compute the "index" (in 100x100 grid) of the starting and ending tile
+        // of the detection area (which is a Rectangle)
+        Vector2 startTile = new Vector2(oriDetectArea.getX() / 32f, oriDetectArea.getY() / 32f);
+        Vector2 endTile = new Vector2((oriDetectArea.getX() + oriDetectArea.getWidth()) / 32f - 1,
+                (oriDetectArea.getY() + oriDetectArea.getHeight()) / 32f - 1);
+        
+//        Gdx.app.log("start tile: ", startTile.toString());
+//        Gdx.app.log("end tile: ", endTile.toString());
+        
+        float lowerLeftX = 100 * 32f, lowerLeftY = 100 * 32f;
+        float upperRightX = 0, upperRightY = 0;
+        for (float i = startTile.x; i <= endTile.x; ++i) {
+            for (float j = startTile.y; j <= endTile.y; ++j) {
+                // find the coordinate (in pixels) of the lower left point (min values of x and y)
+                //      and the upper right point (max values of x and y)
+                //      of the intersection area between detection region and the walls
+                
+                // if the current tile is of the wall
+                if (renderer.getBlockedWallsGrid()[(int) i][(int) j] == 1) {
+                    // update coordinate of lower left point
+                    if (lowerLeftX > i * 32f) lowerLeftX = i * 32f;
+                    if (lowerLeftY > j * 32f) lowerLeftY = j * 32f;
+                    
+                    // update coordinate of upper right point
+                    if (upperRightX < (i + 1) * 32f) upperRightX = (i + 1) * 32f;
+                    if (upperRightY < (j + 1) * 32f) upperRightY = (j + 1) * 32f;
+                }
+            }
+        }
+        
+//        Gdx.app.log("lower left x: ", "" + lowerLeftX);
+//        Gdx.app.log("lower left y: ", "" + lowerLeftY);
+//        Gdx.app.log("upper right x: ", "" + upperRightX);
+//        Gdx.app.log("upper right y: ", "" + upperRightY);
+        
+        // restrict the detection area using the intersection region found above
+        //      (so that the detection area cannot go through the walls)
+        if (lowerLeftX == oriDetectArea.x && lowerLeftY == oriDetectArea.y &&
+                upperRightX == oriDetectArea.x + oriDetectArea.width &&
+                upperRightY == oriDetectArea.y + oriDetectArea.height) {
+            // if the detection area is entirely inside the walls -> return it
+            return oriDetectArea;
+        } else {
+            // otherwise -> clip
+            Rectangle resultRect;
+            
+            // for guard facing left direction
+            if (currentDirection.equalsIgnoreCase("left")) {
+                resultRect = new Rectangle(upperRightX, lowerLeftY,
+                        oriDetectArea.width + oriDetectArea.x - upperRightX, oriDetectArea.height);
+            }
+            // for guard facing right direction
+            else if (currentDirection.equalsIgnoreCase("right")) {
+                resultRect = new Rectangle(oriDetectArea.x, lowerLeftY,
+                        lowerLeftX - oriDetectArea.x, oriDetectArea.height);
+            }
+            // for guard facing up direction
+            else if (currentDirection.equalsIgnoreCase("up")) {
+                resultRect = new Rectangle(lowerLeftX, oriDetectArea.y,
+                        oriDetectArea.width, lowerLeftY - oriDetectArea.y);
+            }
+            // for guard facing down direction
+            else if (currentDirection.equalsIgnoreCase("down")) {
+                resultRect = new Rectangle(lowerLeftX, upperRightY,
+                        oriDetectArea.width, oriDetectArea.y + oriDetectArea.height - upperRightY);
+            }
+            else {
+                resultRect = null;
+            }
+            
+            return resultRect;
         }
     }
     
