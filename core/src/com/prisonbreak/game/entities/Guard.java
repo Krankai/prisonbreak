@@ -61,6 +61,7 @@ public abstract class Guard extends Character {
         
         float lowerLeftX = 100 * 32f, lowerLeftY = 100 * 32f;
         float upperRightX = 0, upperRightY = 0;
+        boolean intersect = false;
         for (float i = startTile.x; i <= endTile.x; ++i) {
             for (float j = startTile.y; j <= endTile.y; ++j) {
                 // find the coordinate (in pixels) of the lower left point (min values of x and y)
@@ -69,6 +70,8 @@ public abstract class Guard extends Character {
                 
                 // if the current tile is of the wall
                 if (renderer.getBlockedWallsGrid()[(int) i][(int) j] == 1) {
+                    if (!intersect) intersect = true;
+                    
                     // update coordinate of lower left point
                     if (lowerLeftX > i * 32f) lowerLeftX = i * 32f;
                     if (lowerLeftY > j * 32f) lowerLeftY = j * 32f;
@@ -87,10 +90,8 @@ public abstract class Guard extends Character {
         
         // restrict the detection area using the intersection region found above
         //      (so that the detection area cannot go through the walls)
-        if (lowerLeftX == oriDetectArea.x && lowerLeftY == oriDetectArea.y &&
-                upperRightX == oriDetectArea.x + oriDetectArea.width &&
-                upperRightY == oriDetectArea.y + oriDetectArea.height) {
-            // if the detection area is entirely inside the walls -> return it
+        if (!intersect) {
+            // if the detection area is NOT obstructed by any walls -> return it
             return oriDetectArea;
         } else {
             // otherwise -> clip

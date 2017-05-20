@@ -35,6 +35,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.prisonbreak.game.entities.Guard;
 import com.prisonbreak.game.entities.Item;
+import com.prisonbreak.game.entities.PatrolGuard;
 import com.prisonbreak.game.entities.Player;
 import com.prisonbreak.game.entities.StationGuard;
 
@@ -359,17 +360,20 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
             // extract values of attributes of 'guard' object
             type = rectGuard.getProperties().get("type", "none", String.class);
             sheetName = rectGuard.getProperties().get("sheetName", "", String.class);
-            direction = rectGuard.getProperties().get("direction", "none", String.class);
             if (type.equalsIgnoreCase("none")) {
                 Gdx.app.log("Error: ", "'type' attribute not found");
                 return;
-            } else if (direction.equalsIgnoreCase("none")) {
-                Gdx.app.log("Error: ", "invalid value for direction attribute");
-                return;
             }
+            
             
             // if stationary guard
             if (type.equalsIgnoreCase("stationary")) {
+                direction = rectGuard.getProperties().get("direction", "none", String.class);
+                if (direction.equalsIgnoreCase("none")) {
+                    Gdx.app.log("Error: ", "invalid value for direction attribute");
+                    return;
+                }
+                
                 // create the specified guard
                 Guard specifiedGuard = new StationGuard(sheetName, direction,
                         rectGuard.getRectangle().getX(), rectGuard.getRectangle().getY());
@@ -377,7 +381,34 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                 
                 // add the corresponding guard to the array
                 guards.add(specifiedGuard);
+            }
+            // if patrol guard
+            else if (type.equalsIgnoreCase("patrol")) {
+                // create the specified guard (without setting mark points)
+                Guard specifiedGuard = new PatrolGuard(sheetName,
+                        rectGuard.getRectangle().getX(), rectGuard.getRectangle().getY());
+                specifiedGuard.setMapControlRenderer(this);
                 
+                // extract list of mark points from the map
+                String listPoints = rectGuard.getProperties().get("markPoints", String.class);
+                String[] tileIndices = listPoints.split(",");
+                for (int i = 0, indexX, indexY; i < tileIndices.length; i += 2) {
+                    indexX = Integer.parseInt(tileIndices[i]);
+                    indexY = Integer.parseInt(tileIndices[i + 1]);
+                    
+//                    Gdx.app.log("x: ", "" + indexX);
+//                    Gdx.app.log("y: ", "" + indexY);
+                    
+                    if (!((PatrolGuard) specifiedGuard).addMarkPoint(new Vector2(indexX * 32f, indexY * 32f))) {
+                        Gdx.app.log("Cannot add mark point ", "(indeX, indexY)");
+                    }
+                }
+                
+//                Gdx.app.log("Mark point 1: ", ((PatrolGuard) specifiedGuard).listMarkPoints.get(0).toString());
+//                Gdx.app.log("Mark point 2: ", ((PatrolGuard) specifiedGuard).listMarkPoints.get(1).toString());
+                
+                // add the corresponding guard to the array
+                guards.add(specifiedGuard);
             }
         }
     }
@@ -1634,6 +1665,19 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
             player.update();
             moveCamera();
             
+            // check if Player is detected by the Guards
+            for (Guard guard : guards) {
+                if (guard instanceof PatrolGuard) {
+                    ((PatrolGuard) guard).update();
+                }
+                
+                if (guard.detectPlayer()) {
+//                    Gdx.app.log("Game over", "");
+                    loseGame();
+                    break;
+                }
+            }
+            
             // search for the door in contact
             for (Object o : doorObjects) {
                 RectangleMapObject r = null;
@@ -1686,14 +1730,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                 }
             }
             
-            // check if Player is detected by the Guards
-            for (Guard guard : guards) {
-                if (guard.detectPlayer()) {
-//                    Gdx.app.log("Game over", "");
-                    loseGame();
-                    break;
-                }
-            }
+            
             
             // update winning state
             if (winGame()) state = STATE.WIN;
@@ -1722,19 +1759,129 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                         }
                     }
                     // layer to draw guard's detection area
+                    // note: even though detection area is RECTANGLE
+                    //      , draw a POLYGON instead (POLYGON still inside the RECTANGLE)                            
                     if (currentLayer == drawDetectionAreaAfterLayer) {
                         for (Guard guard : guards) {
                             endRender();
+                            
+                            // first, determine the four vertices
+                            float nearLeftX, nearLeftY, nearRightX, nearRightY,     // "nearer" points in Guard's POV
+                                    farLeftX, farLeftY, farRightX, farRightY;       // "further" points in Guard's POV
+                            if (guard.getCurrentDirection().equalsIgnoreCase("up")) {
+                                nearLeftX = guard.getDetectArea().x + guard.getDetectArea().width/4;
+                                nearRightX = guard.getDetectArea().x + guard.getDetectArea().width*3/4;
+                                nearLeftY = nearRightY = guard.getDetectArea().y;
+                                
+                                farLeftX = guard.getDetectArea().x;
+                                farRightX = guard.getDetectArea().x + guard.getDetectArea().width;
+                                farLeftY = farRightY = guard.getDetectArea().y + guard.getDetectArea().height;
+                            } else if (guard.getCurrentDirection().equalsIgnoreCase("down")) {
+                                nearLeftX = guard.getDetectArea().x + guard.getDetectArea().width*3/4;
+                                nearRightX = guard.getDetectArea().x + guard.getDetectArea().width/4;
+                                nearLeftY = nearRightY = guard.getDetectArea().y + guard.getDetectArea().height;
+                                
+                                farLeftX = guard.getDetectArea().x + guard.getDetectArea().width;
+                                farRightX = guard.getDetectArea().x;
+                                farLeftY = farRightY = guard.getDetectArea().y;
+                            } else if (guard.getCurrentDirection().equalsIgnoreCase("right")) {
+                                nearLeftY = guard.getDetectArea().y + guard.getDetectArea().height*3/4;
+                                nearRightY = guard.getDetectArea().y + guard.getDetectArea().height/4;
+                                nearLeftX = nearRightX = guard.getDetectArea().x;
+                                
+                                farLeftY = guard.getDetectArea().y + guard.getDetectArea().height;
+                                farRightY = guard.getDetectArea().y;
+                                farLeftX = farRightX = guard.getDetectArea().x + guard.getDetectArea().width;
+                            } else if (guard.getCurrentDirection().equalsIgnoreCase("left")) {
+                                nearLeftY = guard.getDetectArea().y + guard.getDetectArea().height/4;
+                                nearRightY = guard.getDetectArea().y + guard.getDetectArea().height*3/4;
+                                nearLeftX = nearRightX = guard.getDetectArea().x + guard.getDetectArea().width;
+                                
+                                farLeftY = guard.getDetectArea().y;
+                                farRightY = guard.getDetectArea().y + guard.getDetectArea().height;
+                                farLeftX = farRightX = guard.getDetectArea().x;
+                            } else {
+                                nearLeftX = nearLeftY = nearRightX = nearRightY = 0;
+                                farLeftX = farLeftY = farRightY = farRightX = 0;
+                            }
                             
                             // draw detection area
                             Gdx.gl.glEnable(GL20.GL_BLEND);
                             Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
                             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                             shapeRenderer.setColor(1, 0, 0, 0.5f);
-                            shapeRenderer.rect(guard.getDetectArea().getX(),
-                                    guard.getDetectArea().y,
-                                    guard.getDetectArea().getWidth(),
-                                    guard.getDetectArea().getHeight());
+//                            shapeRenderer.rect(guard.getDetectArea().getX(),
+//                                    guard.getDetectArea().y,
+//                                    guard.getDetectArea().getWidth(),
+//                                    guard.getDetectArea().getHeight());
+//                            shapeRenderer.triangle(guard.getDetectArea().x + guard.getDetectArea().width/2,
+//                                    guard.getDetectArea().y,
+//                                    guard.getDetectArea().x,
+//                                    guard.getDetectArea().y + guard.getDetectArea().height,
+//                                    guard.getDetectArea().x + guard.getDetectArea().width,
+//                                    guard.getDetectArea().y + guard.getDetectArea().height);
+                            if (guard.getCurrentDirection().equalsIgnoreCase("up")) {
+                                // the body (rectangle) of the polygon
+                                shapeRenderer.rect(nearLeftX, nearLeftY,
+                                        nearRightX - nearLeftX,
+                                        farLeftY - nearLeftY);
+                                
+                                // the left side (triangle) of the polygon
+                                shapeRenderer.triangle(nearLeftX, nearLeftY,
+                                        farLeftX, farLeftY,
+                                        nearLeftX, farLeftY);
+                                
+                                // the right side (triangle) of the polygon
+                                shapeRenderer.triangle(nearRightX, nearRightY,
+                                        farRightX, farRightY,
+                                        nearRightX, farRightY);
+                            } else if (guard.getCurrentDirection().equalsIgnoreCase("down")) {
+                                // the body (rectangle) of the polygon
+                                shapeRenderer.rect(nearRightX, farRightY,
+                                        nearLeftX - nearRightX,
+                                        nearRightY - farRightY);
+                                
+                                // the left side (triangle) of the polygon
+                                shapeRenderer.triangle(nearLeftX, nearLeftY,
+                                        farLeftX, farLeftY,
+                                        nearLeftX, farLeftY);
+                                
+                                // the right side (triangle) of the polygon
+                                shapeRenderer.triangle(nearRightX, nearRightY,
+                                        farRightX, farRightY,
+                                        nearRightX, farRightY);
+                            } else if (guard.getCurrentDirection().equalsIgnoreCase("right")) {
+                                // the body (rectangle) of the polygon
+                                shapeRenderer.rect(nearRightX, nearRightY,
+                                        farRightX - nearRightX,
+                                        nearLeftY - nearRightY);
+                                
+                                // the left side (triangle) of the polygon
+                                shapeRenderer.triangle(nearLeftX, nearLeftY,
+                                        farLeftX, farLeftY,
+                                        farLeftX, nearLeftY);
+                                
+                                // the right side (triangle) of the polygon
+                                shapeRenderer.triangle(nearRightX, nearRightY,
+                                        farRightX, farRightY,
+                                        farRightX, nearRightY);
+                            } else if (guard.getCurrentDirection().equalsIgnoreCase("left")) {
+                                // the body (rectangle) of the polygon
+                                shapeRenderer.rect(farLeftX, nearLeftY,
+                                        nearLeftX - farLeftX,
+                                        nearRightY - nearLeftY);
+                                
+                                // the left side (triangle) of the polygon
+                                shapeRenderer.triangle(nearLeftX, nearLeftY,
+                                        farLeftX, farLeftY,
+                                        farLeftX, nearLeftY);
+                                
+                                // the right side (triangle) of the polygon
+                                shapeRenderer.triangle(nearRightX, nearRightY,
+                                        farRightX, farRightY,
+                                        farRightX, nearRightY);
+                            }
+                            
                             shapeRenderer.end();
                             Gdx.gl.glDisable(GL20.GL_BLEND);
                             
