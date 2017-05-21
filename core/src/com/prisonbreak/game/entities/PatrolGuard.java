@@ -9,6 +9,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  *
@@ -16,16 +20,22 @@ import com.badlogic.gdx.utils.Array;
  */
 public class PatrolGuard extends Guard {
     
-    public Array<Vector2> listMarkPoints;      // list of mark points that the Guard
+    public Array<Vector2> listMarkPoints;       // list of mark points that the Guard
                                                 // will patrol through
     private int currentLoopIndex = 0;           // currentLoopIndex = 0 -> moving from
                                                 // listMarkPoints[0] to listMarkPoints[1]
+    private float secondDelay = 0;                // seconds to delay at each mark point
+    private boolean indexChange = false;        // notify when currentLoopIndex changes
+    private boolean firstLoop = true;           // true only when first loop
+    private boolean patrolNow = true;           // determine when should call patrol, or wait for .. seconds then call
+    private boolean timerHappen = false;        // true if Timer has been initialized; reset when finish waiting
     
     // (initx, inity) = the coordinate of the initial position, in pixels
-    public PatrolGuard(String tileSheetName, float initx, float inity, Array<Vector2> markPoints) {
+    public PatrolGuard(String tileSheetName, float initx, float inity, float secondDelay, Array<Vector2> markPoints) {
         super(tileSheetName);
         
         listMarkPoints = markPoints;
+        this.secondDelay = secondDelay;
         
         // set initial position
         this.x = initx;
@@ -33,10 +43,11 @@ public class PatrolGuard extends Guard {
     }
     
     // (initx, inity) = the coordinate of the initial position, in pixels
-    public PatrolGuard(String tileSheetName, float initx, float inity) {
+    public PatrolGuard(String tileSheetName, float initx, float inity, float secondDelay) {
         super(tileSheetName);
         
         listMarkPoints = new Array<Vector2>();
+        this.secondDelay = secondDelay;
         
         // set initial position
         this.x = initx;
@@ -72,27 +83,32 @@ public class PatrolGuard extends Guard {
 //        Gdx.app.log("from: ", from.toString());
 //        Gdx.app.log("to: ", to.toString());
         
-        if (from.y == to.y) {
-            // move to the right
-            if (to.x > from.x) {
-                setRightMove(true);
+        if (firstLoop || indexChange) {
+            if (firstLoop) firstLoop = false;
+            
+            if (from.y == to.y) {
+                // move to the right
+                if (to.x > from.x) {
+                    setRightMove(true);
+                }
+                // move to the left
+                else {
+                    setLeftMove(true);
+                }
+            } else if (from.x == to.x) {
+                // move up
+                if (to.y > from.y) {
+                    setUpMove(true);
+                }
+                // move down
+                else {
+                    setDownMove(true);
+                }
+            } else {
+                Gdx.app.log("Error: ", "moving in diagonal");
+                return;
             }
-            // move to the left
-            else {
-                setLeftMove(true);
-            }
-        } else if (from.x == to.x) {
-            // move up
-            if (to.y > from.y) {
-                setUpMove(true);
-            }
-            // move down
-            else {
-                setDownMove(true);
-            }
-        } else {
-            Gdx.app.log("Error: ", "moving in diagonal");
-            return;
+            indexChange = false;
         }
         
         // update motion
@@ -100,35 +116,63 @@ public class PatrolGuard extends Guard {
         
         // check new position (adjust if neccessary), and set new value of currentLoopIndex
         if (moveLeft) {
-            if (this.x < to.x) {
+            if (this.x <= to.x) {
                 this.x = to.x;
                 currentLoopIndex = (currentLoopIndex + 1) % listMarkPoints.size;
+                indexChange = true;
+                patrolNow = false;
             }
         } else if (moveRight) {
-            if (this.x > to.x) {
+            if (this.x >= to.x) {
                 this.x = to.x;
                 currentLoopIndex = (currentLoopIndex + 1) % listMarkPoints.size;
+                indexChange = true;
+                patrolNow = false;
             }
         } else if (moveUp) {
-            if (this.y > to.y) {
+            if (this.y >= to.y) {
                 this.y = to.y;
                 currentLoopIndex = (currentLoopIndex + 1) % listMarkPoints.size;
+                indexChange = true;
+                patrolNow = false;
             }
         } else if (moveDown) {
-            if (this.y < to.y) {
+            if (this.y <= to.y) {
                 this.y = to.y;
                 currentLoopIndex = (currentLoopIndex + 1) % listMarkPoints.size;
+                indexChange = true;
+                patrolNow = false;
             }
         } else {
             Gdx.app.log("Error: ", "patrol guard is stationary");
-            return;
         }   
     }
     
     @Override
     public void update() {
         if (!sleep) {
-            patrol();
+//            Gdx.app.log("indexChange: ", "" + indexChange);
+//            Gdx.app.log("change: ", "" + change);
+//            Gdx.app.log("patrolNow: ", "" + patrolNow);
+//            if (indexChange && !change) {
+//                patrolNow = false;
+//            }
+            if (patrolNow) {
+                patrol();
+                timerHappen = false;
+            } else {
+                if (!timerHappen) {
+                    Timer.schedule(new Task() {
+                        @Override
+                        public void run() {
+                            patrolNow = true;
+    //                        change = true;
+                            Gdx.app.log("Timer patrolNow: ", "" + patrolNow);
+                        }
+                    }, secondDelay);
+                    timerHappen = true;
+                }
+            }
         }
         
         // update new Sprite

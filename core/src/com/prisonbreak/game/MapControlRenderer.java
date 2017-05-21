@@ -384,9 +384,11 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
             }
             // if patrol guard
             else if (type.equalsIgnoreCase("patrol")) {
+                float secondDelay = rectGuard.getProperties().get("delay", Float.class);
+                
                 // create the specified guard (without setting mark points)
                 Guard specifiedGuard = new PatrolGuard(sheetName,
-                        rectGuard.getRectangle().getX(), rectGuard.getRectangle().getY());
+                        rectGuard.getRectangle().getX(), rectGuard.getRectangle().getY(), secondDelay);
                 specifiedGuard.setMapControlRenderer(this);
                 
                 // extract list of mark points from the map
@@ -658,8 +660,8 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         
         player.x = rectSpawmPoint.getRectangle().getX();
         player.y = rectSpawmPoint.getRectangle().getY();
-//        player.x = 73 * 32;
-//        player.y = 81 * 32;
+//        player.x = 50 * 32;
+//        player.y = 79 * 32;
     }
     
     // check winning condition
@@ -704,107 +706,99 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     
     // show/hide the Player's inventory based on its current status
     private void showHideInventory() {
-        // if inventory is currently closed
-        if (!inventoryOpen) {
-            inventoryOpen = true;       // set status to "opened"
-            state = STATE.PAUSE;        // pause the game temporarily
-            
-            // create an array of names of Player's items
-            Array<String> names = new Array<String>();
-            if (player.getInventory().size == 0) {
-                names.add("Nothing");
-            } else {
-                for (Item item : player.getInventory()) {
-                    names.add(item.getItemName());
-                }
+        // create an array of names of Player's items
+        Array<String> names = new Array<String>();
+        if (player.getInventory().size == 0) {
+            names.add("Nothing");
+        } else {
+            for (Item item : player.getInventory()) {
+                names.add(item.getItemName());
             }
-            
-            // create the List panel to display the inventory
-            inventory = new List(skin, "dimmed");
-            inventory.setItems(names);
-            inventory.setSelectedIndex(0);
-            inventory.setSize(Gdx.graphics.getWidth()/6, Gdx.graphics.getHeight()/2);
-            inventory.setPosition(Gdx.graphics.getWidth()*3/4 - inventory.getWidth()/2,
-                    Gdx.graphics.getHeight()/2 - inventory.getHeight()/2);
-            
-            // create the description Label to display description of each item
-            descLabel = new Label("", skin, "custom-small");
-            descLabel.setSize(Gdx.graphics.getWidth()/6, Gdx.graphics.getHeight()/4);
-            descLabel.setPosition(inventory.getX() + inventory.getWidth(),
-                    inventory.getY() + inventory.getHeight() - descLabel.getHeight());
-            descLabel.setAlignment(Align.topLeft);
-            descLabel.setWrap(true);
-            if (player.getInventory().size > 0) {
-                descLabel.setText(player.getInventory().get(inventory.getSelectedIndex()).getDescription());
-            }
-            stage.addActor(descLabel);
-            
-            // create title: Inventory
-            titleLabel = new Label("INVENTORY", skin, "subtitle");
-            titleLabel.setSize(inventory.getWidth(), titleLabel.getHeight() * 3/2);
-            titleLabel.setPosition(inventory.getX(), inventory.getY() + inventory.getHeight());
-            titleLabel.setAlignment(Align.center);
-            stage.addActor(titleLabel);
-            
-            // add InputListener to inventory
-            inventory.addListener(new InputListener() {
-                @Override
-                public boolean keyUp(InputEvent event, int keycode) {
-                    int currentIndex = inventory.getSelectedIndex();
-                    int upIndex = currentIndex - 1;
-                    int downIndex = currentIndex + 1;
-                    String desc = "";
-
-                    if (upIndex < 0) upIndex = inventory.getItems().size - 1;
-                    if (downIndex >= inventory.getItems().size) downIndex = 0;
-
-                    switch (keycode) {
-                        case Keys.UP:
-                            // scroll up the item objectItems
-                            inventory.setSelectedIndex(upIndex);
-                            
-                            // display the corresponding description in descLabel
-                            if (player.getInventory().size > 0)
-                                desc = player.getInventory().get(upIndex).getDescription();
-                            descLabel.setText(desc);
-                            
-                            break;
-                        case Keys.DOWN:
-                            // scroll down the item objectItems
-                            inventory.setSelectedIndex(downIndex);
-                            
-                            // display the corresponding description in descLabel
-                            if (player.getInventory().size > 0)
-                                desc = player.getInventory().get(downIndex).getDescription();
-                            descLabel.setText(desc);
-                            
-                            break;
-                        case Keys.I:
-                            // if the inventory is currently opened, press I again
-                            // to close
-                            
-                            inventoryOpen = false;      // set status to "closed"
-            
-                            descLabel.remove();         // remove actors
-                            inventory.remove();
-                            titleLabel.remove();
-
-                            state = STATE.ONGOING;      // unpause the game
-
-                            resetInputProcessor();      // reset InputProcessor to this MapControlRenderer
-                            break;
-                        default:
-                            break;
-                    }
-
-                    return true;
-                }
-            });
-            stage.addActor(inventory);
-            stage.setKeyboardFocus(inventory);
-            
-            Gdx.input.setInputProcessor(stage);     // change InputProcessor to stage
         }
+
+        // create the List panel to display the inventory
+        inventory = new List(skin, "dimmed");
+        inventory.setItems(names);
+        inventory.setSelectedIndex(0);
+        inventory.setSize(Gdx.graphics.getWidth()/6, Gdx.graphics.getHeight()/2);
+        inventory.setPosition(Gdx.graphics.getWidth()*3/4 - inventory.getWidth()/2,
+                Gdx.graphics.getHeight()/2 - inventory.getHeight()/2);
+
+        // create the description Label to display description of each item
+        descLabel = new Label("", skin, "custom-small");
+        descLabel.setSize(Gdx.graphics.getWidth()/6, Gdx.graphics.getHeight()/4);
+        descLabel.setPosition(inventory.getX() + inventory.getWidth(),
+                inventory.getY() + inventory.getHeight() - descLabel.getHeight());
+        descLabel.setAlignment(Align.topLeft);
+        descLabel.setWrap(true);
+        if (player.getInventory().size > 0) {
+            descLabel.setText(player.getInventory().get(inventory.getSelectedIndex()).getDescription());
+        }
+        stage.addActor(descLabel);
+
+        // create title: Inventory
+        titleLabel = new Label("INVENTORY", skin, "subtitle");
+        titleLabel.setSize(inventory.getWidth(), titleLabel.getHeight() * 3/2);
+        titleLabel.setPosition(inventory.getX(), inventory.getY() + inventory.getHeight());
+        titleLabel.setAlignment(Align.center);
+        stage.addActor(titleLabel);
+
+        // add InputListener to inventory
+        inventory.addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                int currentIndex = inventory.getSelectedIndex();
+                int upIndex = currentIndex - 1;
+                int downIndex = currentIndex + 1;
+                String desc = "";
+
+                if (upIndex < 0) upIndex = inventory.getItems().size - 1;
+                if (downIndex >= inventory.getItems().size) downIndex = 0;
+
+                switch (keycode) {
+                    case Keys.UP:
+                        // scroll up the item objectItems
+                        inventory.setSelectedIndex(upIndex);
+
+                        // display the corresponding description in descLabel
+                        if (player.getInventory().size > 0)
+                            desc = player.getInventory().get(upIndex).getDescription();
+                        descLabel.setText(desc);
+
+                        break;
+                    case Keys.DOWN:
+                        // scroll down the item objectItems
+                        inventory.setSelectedIndex(downIndex);
+
+                        // display the corresponding description in descLabel
+                        if (player.getInventory().size > 0)
+                            desc = player.getInventory().get(downIndex).getDescription();
+                        descLabel.setText(desc);
+
+                        break;
+                    case Keys.I:
+                        // if the inventory is currently opened, press I again
+                        // to close
+
+                        descLabel.remove();         // remove actors
+                        inventory.remove();
+                        titleLabel.remove();
+
+                        state = STATE.ONGOING;      // unpause the game
+
+                        resetInputProcessor();      // reset InputProcessor to this MapControlRenderer
+                        break;
+                    default:
+                        break;
+                }
+
+                return true;
+            }
+        });
+        stage.addActor(inventory);
+        stage.setKeyboardFocus(inventory);
+
+        Gdx.input.setInputProcessor(stage);     // change InputProcessor to stage
     }
     
     // carry out search interaction
@@ -1810,16 +1804,6 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                             Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
                             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                             shapeRenderer.setColor(1, 0, 0, 0.5f);
-//                            shapeRenderer.rect(guard.getDetectArea().getX(),
-//                                    guard.getDetectArea().y,
-//                                    guard.getDetectArea().getWidth(),
-//                                    guard.getDetectArea().getHeight());
-//                            shapeRenderer.triangle(guard.getDetectArea().x + guard.getDetectArea().width/2,
-//                                    guard.getDetectArea().y,
-//                                    guard.getDetectArea().x,
-//                                    guard.getDetectArea().y + guard.getDetectArea().height,
-//                                    guard.getDetectArea().x + guard.getDetectArea().width,
-//                                    guard.getDetectArea().y + guard.getDetectArea().height);
                             if (guard.getCurrentDirection().equalsIgnoreCase("up")) {
                                 // the body (rectangle) of the polygon
                                 shapeRenderer.rect(nearLeftX, nearLeftY,
@@ -1926,6 +1910,13 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
             case Input.Keys.SPACE:
                 player.sleepWakeup();
                 break;
+            case Input.Keys.I:
+                Gdx.app.log("Key I: ", "typed");
+                if (state != STATE.PAUSE ) {
+                    showHideInventory();
+                    state = STATE.PAUSE;        // pause the game temporarily
+                }
+                break;
         }
         
         return true;
@@ -1994,10 +1985,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                 }
                 
                 break;
-            case Input.Keys.I:
-                if (state != STATE.PAUSE)
-                    showHideInventory();
-                break;
+            
             default:
                 break;
         }

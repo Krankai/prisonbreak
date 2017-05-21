@@ -162,7 +162,7 @@ public abstract class Character {
         // get bounding rectangle of current Character
         Rectangle characterBounding = new Rectangle(newX, newY, width, height);
         
-        /* With other Characters */
+        /* With Guard (when as Player) */
         
         // if current character == Player
         float offset = 4f;
@@ -183,21 +183,6 @@ public abstract class Character {
                     return true;
             }
         }
-        // if current character == Guard
-        else {
-            Rectangle rectGuard = new Rectangle(characterBounding.getX() + offset,
-                    characterBounding.getY() + offset,
-                    characterBounding.getWidth()-2*offset,
-                    characterBounding.getHeight()-2*offset);
-            Rectangle rectPlayer = new Rectangle(renderer.getPlayer().getSprite().getBoundingRectangle().getX() + offset,
-                    renderer.getPlayer().getSprite().getBoundingRectangle().getY() + offset,
-                    renderer.getPlayer().getSprite().getBoundingRectangle().getWidth()-2*offset,
-                    renderer.getPlayer().getSprite().getBoundingRectangle().getHeight()-2*offset);
-            
-            // check with Player
-            if (renderer.getPlayer().getSprite().getBoundingRectangle().overlaps(characterBounding))
-                return true;
-        }
         
         /* End */
         
@@ -206,8 +191,9 @@ public abstract class Character {
         // consider each objects
         for (MapObject object : renderer.getStaticObjects()) {
             // cast to rectangle object
-            if (object.isVisible() && (object.getProperties().get("blocked", Boolean.class) != null)
-                    && object instanceof RectangleMapObject) {
+            if (object.isVisible() && object.getProperties().get("blocked", Boolean.class) != null &&
+                    object.getProperties().get("blocked", Boolean.class) &&
+                    object instanceof RectangleMapObject) {
                 RectangleMapObject rectObject = (RectangleMapObject) object;
                 
                 // check for overlapping ~ collision
