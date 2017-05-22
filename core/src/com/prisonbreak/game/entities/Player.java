@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.Array;
  */
 public class Player extends Character {
                   
-    private Array<Item> inventory;
+    private final Array<Item> inventory;
     
     public Player() {
         super("prisoner.png");
@@ -58,6 +58,11 @@ public class Player extends Character {
         sprite = new Sprite(currentTexture);
         sprite.setX(x);
         sprite.setY(y);
+    }
+    
+    @Override
+    public void dispose() {
+        super.dispose();
     }
     
 }

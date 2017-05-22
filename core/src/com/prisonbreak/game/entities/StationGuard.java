@@ -70,4 +70,9 @@ public class StationGuard extends Guard {
         
     }
     
+    @Override
+    public void dispose() {
+        super.dispose();
+    }
+    
 }

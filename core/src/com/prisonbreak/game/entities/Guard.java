@@ -5,7 +5,6 @@
  */
 package com.prisonbreak.game.entities;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -242,6 +241,11 @@ public abstract class Guard extends Character {
 //        }
         
         return false;
+    }
+    
+    @Override
+    public void dispose() {
+        super.dispose();
     }
     
 }

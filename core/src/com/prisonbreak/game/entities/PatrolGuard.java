@@ -11,8 +11,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  *
@@ -179,6 +177,11 @@ public class PatrolGuard extends Guard {
         sprite = new Sprite(currentTexture);
         sprite.setX(x);
         sprite.setY(y);
+    }
+    
+    @Override
+    public void dispose() {
+        super.dispose();
     }
     
 }

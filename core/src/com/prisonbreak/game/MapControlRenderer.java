@@ -27,7 +27,6 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -71,9 +70,8 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     private int indexForMessageTree = 0;
     private int indexRemainingItems = 1;        // for safe locker (pass_unlock_interaction)
     private String latestObjectName = "";       // name of the lastest object in interaction with Player
-    private boolean interactHappen = false;     // flag -> indicate whether interaction happens
-    private boolean inventoryOpen = false;      // flag -> indicate whether the inventory is currenly opened
-    private boolean latestDoorLocked = false;   // flag -> indicate whether the latest door in interaction
+    private boolean interactHappen = false;     // indicate whether interaction happens
+    private boolean latestDoorLocked = false;   // indicate whether the latest door in interaction
                                                 // with Player is locked or not
     private boolean doorHidden = false;         // indicate whether the current is hidden
     
@@ -98,7 +96,6 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
     public List inventory;
     public TextField passField;         // to enter password -> unlock objects
     public TextButton txtButton;
-    public final Skin skin;
     
     public MapControlRenderer(TiledMap map) {
         super(map);
@@ -106,7 +103,6 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         
         // ui components for "interaction conversation"
         stage = new Stage();
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         
         // create new player
         player = new Player();
@@ -678,7 +674,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         state = STATE.PAUSE;
         
         // notify Player
-        dialogBoxLabel = new Label("Ouch!!! You have been found.", skin, "custom");
+        dialogBoxLabel = new Label("Ouch!!! You have been found.", PrisonBreakGame.gameSkin, "custom");
         dialogBoxLabel.setPosition(0, 0);
         dialogBoxLabel.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/5);
         dialogBoxLabel.setAlignment(Align.topLeft);
@@ -717,7 +713,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         }
 
         // create the List panel to display the inventory
-        inventory = new List(skin, "dimmed");
+        inventory = new List(PrisonBreakGame.gameSkin, "dimmed");
         inventory.setItems(names);
         inventory.setSelectedIndex(0);
         inventory.setSize(Gdx.graphics.getWidth()/6, Gdx.graphics.getHeight()/2);
@@ -725,7 +721,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                 Gdx.graphics.getHeight()/2 - inventory.getHeight()/2);
 
         // create the description Label to display description of each item
-        descLabel = new Label("", skin, "custom-small");
+        descLabel = new Label("", PrisonBreakGame.gameSkin, "custom-small");
         descLabel.setSize(Gdx.graphics.getWidth()/6, Gdx.graphics.getHeight()/4);
         descLabel.setPosition(inventory.getX() + inventory.getWidth(),
                 inventory.getY() + inventory.getHeight() - descLabel.getHeight());
@@ -737,7 +733,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         stage.addActor(descLabel);
 
         // create title: Inventory
-        titleLabel = new Label("INVENTORY", skin, "subtitle");
+        titleLabel = new Label("INVENTORY", PrisonBreakGame.gameSkin, "subtitle");
         titleLabel.setSize(inventory.getWidth(), titleLabel.getHeight() * 3/2);
         titleLabel.setPosition(inventory.getX(), inventory.getY() + inventory.getHeight());
         titleLabel.setAlignment(Align.center);
@@ -818,7 +814,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
             // create conversation box
             // for the first message 
             if (indexForMessageTree == 0) {
-                dialogBoxLabel = new Label(messageTree.get(0).get(0), skin, "custom");
+                dialogBoxLabel = new Label(messageTree.get(0).get(0), PrisonBreakGame.gameSkin, "custom");
                 dialogBoxLabel.setPosition(0, 0);
                 dialogBoxLabel.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/5);
                 dialogBoxLabel.setAlignment(Align.topLeft);
@@ -865,7 +861,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                 itemNames.add("Nothing");   // add additional value - for not choosing any items
 
                 // create conversation box
-                dialogBoxLabel = new Label(messageTree.get(1).get(0), skin, "custom");
+                dialogBoxLabel = new Label(messageTree.get(1).get(0), PrisonBreakGame.gameSkin, "custom");
                 dialogBoxLabel.setPosition(0, 0);
                 dialogBoxLabel.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/5);
                 dialogBoxLabel.setAlignment(Align.topLeft);
@@ -873,7 +869,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                 stage.addActor(dialogBoxLabel);
 
                 // create objectItems of items
-                itemList = new List(skin, "custom");
+                itemList = new List(PrisonBreakGame.gameSkin, "custom");
                 itemList.setItems(itemNames);
                 itemList.setSelectedIndex(0);
                 itemList.setSize(Gdx.graphics.getWidth()/4, Gdx.graphics.getHeight()/3);
@@ -985,7 +981,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
             // first
             if (indexForMessageTree == 0) {
                 // create conversation box
-                dialogBoxLabel = new Label(messageTree.get(2).get(0), skin, "custom");
+                dialogBoxLabel = new Label(messageTree.get(2).get(0), PrisonBreakGame.gameSkin, "custom");
                 dialogBoxLabel.setPosition(0, 0);
                 dialogBoxLabel.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/5);
                 dialogBoxLabel.setAlignment(Align.topLeft);
@@ -1020,7 +1016,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                 Array<String> options = new Array<String>();
                 options.add("Yes");
                 options.add("No");
-                itemList = new List(skin, "custom");
+                itemList = new List(PrisonBreakGame.gameSkin, "custom");
                 itemList.setItems(options);
                 itemList.setSelectedIndex(0);
                 itemList.setSize(Gdx.graphics.getWidth()/4, Gdx.graphics.getHeight()/3);
@@ -1107,7 +1103,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
             // first
             if (indexForMessageTree == 0) {
                 // create conversation box
-                dialogBoxLabel = new Label(messageTree.get(3).get(0), skin, "custom");
+                dialogBoxLabel = new Label(messageTree.get(3).get(0), PrisonBreakGame.gameSkin, "custom");
                 dialogBoxLabel.setPosition(0, 0);
                 dialogBoxLabel.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/5);
                 dialogBoxLabel.setAlignment(Align.topLeft);
@@ -1140,7 +1136,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                 Array<String> options = new Array<String>();
                 options.add("Yes");
                 options.add("No");
-                itemList = new List(skin, "custom");
+                itemList = new List(PrisonBreakGame.gameSkin, "custom");
                 itemList.setItems(options);
                 itemList.setSelectedIndex(0);
                 itemList.setSize(Gdx.graphics.getWidth()/4, Gdx.graphics.getHeight()/3);
@@ -1230,7 +1226,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         // first
         if (indexForMessageTree == 0) {
             // create conversation box
-            dialogBoxLabel = new Label(messageTree.get(4).get(0) + latestObjectName + ".", skin, "custom");
+            dialogBoxLabel = new Label(messageTree.get(4).get(0) + latestObjectName + ".", PrisonBreakGame.gameSkin, "custom");
             dialogBoxLabel.setPosition(0, 0);
             dialogBoxLabel.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/5);
             dialogBoxLabel.setAlignment(Align.topLeft);
@@ -1242,7 +1238,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
             dialogBoxLabel.setText(messageTree.get(4).get(1));
             
             // create description/message box to display the written message
-            descLabel = new Label("\"" + objectItems.get(0).getDescription() + "\"", skin, "custom");
+            descLabel = new Label("\"" + objectItems.get(0).getDescription() + "\"", PrisonBreakGame.gameSkin, "custom");
             descLabel.setSize(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
             descLabel.setPosition(Gdx.graphics.getWidth()/2 - descLabel.getWidth()/2,
                     Gdx.graphics.getHeight()*3/5 - descLabel.getHeight()/2);
@@ -1293,7 +1289,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
             // first
             if (indexForMessageTree == 0) {
                 // create conversation box
-                dialogBoxLabel = new Label(messageTree.get(5).get(0), skin, "custom");
+                dialogBoxLabel = new Label(messageTree.get(5).get(0), PrisonBreakGame.gameSkin, "custom");
                 dialogBoxLabel.setPosition(0, 0);
                 dialogBoxLabel.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/5);
                 dialogBoxLabel.setAlignment(Align.topLeft);
@@ -1321,7 +1317,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                 Array<String> options = new Array<String>();
                 options.add("Yes");
                 options.add("No");
-                itemList = new List(skin, "custom");
+                itemList = new List(PrisonBreakGame.gameSkin, "custom");
                 itemList.setItems(options);
                 itemList.setSelectedIndex(0);
                 itemList.setSize(Gdx.graphics.getWidth()/4, Gdx.graphics.getHeight()/3);
@@ -1375,14 +1371,14 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                 dialogBoxLabel.setText(messageTree.get(5).get(2));
                 
                 // create a TextField for player to enter password
-                passField = new TextField("Full name", skin, "default");
+                passField = new TextField("Full name", PrisonBreakGame.gameSkin, "default");
                 passField.setHeight(25);
                 passField.setPosition(Gdx.graphics.getWidth()/2 - passField.getWidth()/2,
                         Gdx.graphics.getHeight()/2 - passField.getHeight()/2);
                 stage.addActor(passField);
                 
                 // create button, goes with the textfield
-                txtButton = new TextButton("Enter", skin, "round");
+                txtButton = new TextButton("Enter", PrisonBreakGame.gameSkin, "round");
                 txtButton.setHeight(passField.getHeight());
                 txtButton.setPosition(passField.getWidth() + passField.getX(), passField.getY());
                 txtButton.addListener(new ClickListener() {
@@ -1447,7 +1443,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
             // first
             if (indexForMessageTree == 0) {
                 // create conversation box
-                dialogBoxLabel = new Label(messageTree.get(6).get(0), skin, "custom");
+                dialogBoxLabel = new Label(messageTree.get(6).get(0), PrisonBreakGame.gameSkin, "custom");
                 dialogBoxLabel.setPosition(0, 0);
                 dialogBoxLabel.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/5);
                 dialogBoxLabel.setAlignment(Align.topLeft);
@@ -1455,14 +1451,14 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
                 
                 // create a TextField + TextButton -> prompt for password to unlock the safe locker
                 // textfield
-                passField = new TextField("", skin, "default");
+                passField = new TextField("", PrisonBreakGame.gameSkin, "default");
                 passField.setHeight(25);
                 passField.setPosition(Gdx.graphics.getWidth()/2 - passField.getWidth()/2,
                         Gdx.graphics.getHeight()/2 - passField.getHeight()/2);
                 stage.addActor(passField);
                 
                 // textbutton
-                txtButton = new TextButton("Enter", skin, "round");
+                txtButton = new TextButton("Enter", PrisonBreakGame.gameSkin, "round");
                 txtButton.setHeight(passField.getHeight());
                 txtButton.setPosition(passField.getWidth() + passField.getX(), passField.getY());
                 txtButton.addListener(new ClickListener() {
@@ -1538,7 +1534,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         // first
         if (indexForMessageTree == 0) {
             // create conversation box
-            dialogBoxLabel = new Label(messageTree.get(7).get(0), skin, "custom");
+            dialogBoxLabel = new Label(messageTree.get(7).get(0), PrisonBreakGame.gameSkin, "custom");
             dialogBoxLabel.setPosition(0, 0);
             dialogBoxLabel.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/5);
             dialogBoxLabel.setAlignment(Align.topLeft);
@@ -1566,7 +1562,7 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
             Array<String> options = new Array<String>();
             options.add("Yes");
             options.add("No");
-            itemList = new List(skin, "custom");
+            itemList = new List(PrisonBreakGame.gameSkin, "custom");
             itemList.setItems(options);
             itemList.setSelectedIndex(0);
             itemList.setSize(Gdx.graphics.getWidth()/4, Gdx.graphics.getHeight()/3);
@@ -2028,7 +2024,10 @@ public class MapControlRenderer extends OrthogonalTiledMapRenderer implements In
         player.dispose();
         map.dispose();
         stage.dispose();
-        skin.dispose();
+        shapeRenderer.dispose();
+        for (int i = 0; i < guards.size; ++i) {
+            guards.get(i).dispose();
+        }
     }
     
 }

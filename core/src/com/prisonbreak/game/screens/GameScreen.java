@@ -19,10 +19,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.prisonbreak.game.MapControlRenderer;
+import com.prisonbreak.game.PrisonBreakGame;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -36,7 +36,6 @@ public class GameScreen implements Screen {
     private final Game game;
     private final TiledMap map;
     private final MapControlRenderer mapRenderer;
-    private final Skin skin;
     private final Stage stage;
     private final Label label;
     private final Group labelContainer;
@@ -50,15 +49,12 @@ public class GameScreen implements Screen {
         mapRenderer = new MapControlRenderer(map);      // create map-control renderer
         mapRenderer.setView(mapRenderer.getCamera());   // set camera using with the renderer
         
-        // import skin
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-        
         // create new stage
         stage = new Stage(new ScreenViewport());
         
         // create label for displaying message, initialize to winning message
         label = new Label("CONGRATULATIONS\nYOU HAVE ESCAPED THE PRISON\nPress ESC to return to the Main Menu",
-                skin, "title-plain");
+                PrisonBreakGame.gameSkin, "title-plain");
         label.setColor(Color.RED);
         label.setPosition(0, 0);
         label.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -134,6 +130,7 @@ public class GameScreen implements Screen {
         // if game is paused (due to winning/losing the game) -> still, display message
         if (mapRenderer.getCurrentState() == MapControlRenderer.STATE.END) {
             if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+                dispose();
                 game.setScreen(new IntroScreen(game));
             }
             stage.act();
@@ -164,7 +161,8 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
-        skin.dispose();
+        map.dispose();
+        mapRenderer.dispose();
     }
     
 }
