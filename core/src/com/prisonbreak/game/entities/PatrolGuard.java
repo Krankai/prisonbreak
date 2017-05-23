@@ -18,7 +18,7 @@ import com.badlogic.gdx.utils.Timer.Task;
  */
 public class PatrolGuard extends Guard {
     
-    public Array<Vector2> listMarkPoints;       // list of mark points that the Guard
+    private Array<Vector2> listMarkPoints;      // list of mark points that the Guard
                                                 // will patrol through
     private int currentLoopIndex = 0;           // currentLoopIndex = 0 -> moving from
                                                 // listMarkPoints[0] to listMarkPoints[1]
