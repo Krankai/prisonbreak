@@ -164,8 +164,8 @@ public class PatrolGuard extends Guard {
                         @Override
                         public void run() {
                             patrolNow = true;
-    //                        change = true;
-                            Gdx.app.log("Timer patrolNow: ", "" + patrolNow);
+//                            change = true;
+//                            Gdx.app.log("Timer patrolNow: ", "" + patrolNow);
                         }
                     }, secondDelay);
                     timerHappen = true;
