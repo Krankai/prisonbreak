@@ -7,6 +7,7 @@ package com.prisonbreak.game.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.prisonbreak.game.MapControlRenderer;
 import com.prisonbreak.game.PrisonBreakGame;
 
 /**
@@ -30,6 +32,7 @@ public class IntroScreen implements Screen {
     
     private Stage stage;
     private Game game;
+    private final Label instruct;
     
     public IntroScreen(Game aGame) {
         game = aGame;
@@ -52,6 +55,31 @@ public class IntroScreen implements Screen {
         title.setAlignment(Align.center);
         stage.addActor(title);
         
+        // create label for displaying instructions to play the game
+        String instructions = "Use arrow keys or W S D A to move the character.\n"
+                + "Press F to interact with objects.\nPress I to show/hide player's inventory.\n\n"
+                + "Go around and find the necessary items and information to get out.\n"
+                + "Remember, avoid the security guards at all cost. Good luck, prisoner!\n\n"
+                + "Press ENTER to play the game.";
+        instruct = new Label(instructions, PrisonBreakGame.gameSkin, "custom");
+        instruct.setPosition(Gdx.graphics.getWidth() / 6, Gdx.graphics.getHeight() / 6);
+        instruct.setSize(Gdx.graphics.getWidth() * 2/3, Gdx.graphics.getHeight() * 2/3);
+        instruct.setAlignment(Align.left);
+        instruct.setWrap(true);
+        instruct.addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.ENTER) {
+                    instruct.remove();
+                    dispose();
+                    game.setScreen(new GameScreen(game));
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+        
         // create "Play" button
         TextButton playButton = new TextButton("Play", PrisonBreakGame.gameSkin, "round");
         playButton.setWidth(Gdx.graphics.getWidth() / 4);
@@ -60,8 +88,10 @@ public class IntroScreen implements Screen {
             
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                dispose();
-                game.setScreen(new GameScreen(game));
+//                dispose();
+//                game.setScreen(new GameScreen(game));
+                stage.addActor(instruct);
+                stage.setKeyboardFocus(instruct);
             }
             
             @Override
