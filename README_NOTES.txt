@@ -1,1 +1,0 @@
-Shade Skin - Credit to Raymond "Raeleus" Buckley.
